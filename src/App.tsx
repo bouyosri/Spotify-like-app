@@ -25,16 +25,16 @@ const App: React.FC = () => {
     getAuthorization();
   }, []);
 
-  // const handleLogout = () => {
-  //   logout();
-  //   setToken("");
-  // };
+  const handleLogout = () => {
+    logout();
+    setToken("");
+  };
 
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchKey(event.target.value);
-  //   searchArtists(searchKey, token);
-  //   // setArtists(searchArtists(searchKey, token))
-  // };
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKey(event.target.value);
+    searchArtists(searchKey, token);
+    // setArtists(searchArtists(searchKey, token))
+  };
 
   return (
     <div className="flex flex-col h-[100%] ">
