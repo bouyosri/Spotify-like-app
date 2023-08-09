@@ -22,3 +22,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Helvetica Neue",
     monospace;
 }
+.content {
+  background: linear-gradient(to bottom, #00000099, #121212);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
