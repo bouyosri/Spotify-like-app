@@ -9,7 +9,11 @@ import {
 } from "../services/auth";
 import { searchArtists } from "../services/artistService";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onSearchResult: (result: any[]) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
   const [token, setToken] = useState<string | null>("");
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
@@ -26,21 +30,29 @@ const Navbar: React.FC = () => {
     setToken("");
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKey(event.target.value);
-    searchArtists(searchKey, token);
-    // setArtists(searchArtists(searchKey, token))
+  const handleSearchChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newSearchKey = event.target.value;
+    setSearchKey(newSearchKey);
+
+    try {
+      const result = await searchArtists(newSearchKey, token);
+      onSearchResult(result); // Send the result to the parent component
+    } catch (error) {
+      console.error("Error searching artists:", error);
+    }
   };
   return (
     <div>
-      <div className="bg-zinc-900 w-[100%] grid grid-cols-3 gap-3 h-14">
+      <div className="bg-zinc-900 w-[100%] grid grid-cols-3 gap-1 h-14">
         {/* Arrows */}
         <div className=" flex flex-row gap-3 ml-4 self-center ">
           <div className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer">
             <div className="mt-[6px] ml-[6px]">
               <img
                 src="images/arrow-back.svg"
-                alt="Spotify Logo"
+                alt=""
                 className="w-[16px] h-[16px] "
               />
             </div>
@@ -49,18 +61,18 @@ const Navbar: React.FC = () => {
             <div className="mt-[6px] ml-[6px]">
               <img
                 src="images/arrow-next.svg"
-                alt="Spotify Logo"
+                alt=""
                 className="w-[16px] h-[16px] "
               />
             </div>
           </div>
         </div>
         {/* Search Bar */}
-        <div className=" flex flex-row gap-3 ml-4 self-center bg-white px-8 py-3 rounded-full w-[350px]">
+        <div className=" flex flex-row gap-3 ml-[-100px] self-center bg-white px-8 py-3 rounded-full w-[350px]">
           <div className="mt-[0px] ml-[0px]">
             <img
               src="images/search-icon.svg"
-              alt="Spotify Logo"
+              alt=""
               className="w-[24px] h-[24px] "
             />
           </div>
