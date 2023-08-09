@@ -28,6 +28,15 @@ export const logout = (): void => {
 export const getAuthorizationUrl = (): string => {
   return `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`;
 };
+
+export const getAuthorizationUrlToGetCurrentTrack = () => {
+  const CLIENT_ID = "8684bba9520740fabffe4cce9c33985a";
+  const REDIRECT_URI = "http://localhost:3000/";
+  const RESPONSE_TYPE = "token";
+  const SCOPES = "user-read-playback-state";
+
+  return `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+};
 export const getAuthorization = async () => {
   var authParameters = {
     method: "POST",

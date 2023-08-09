@@ -11,8 +11,10 @@ import {
   logout,
   getAuthorizationUrl,
   getAuthorization,
+  getAuthorizationUrlToGetCurrentTrack,
 } from "./services/auth";
 import { searchArtists } from "./services/artistService";
+import { getCurrentTrack, playTrackById } from "./services/trackService";
 import { Track } from "./types/Track";
 
 const App: React.FC = () => {
@@ -27,11 +29,19 @@ const App: React.FC = () => {
     setToken(retrievedToken);
     // searchArtists();
     getAuthorization();
+    getAuthorizationUrlToGetCurrentTrack();
   }, []);
 
   const handleLogout = () => {
     logout();
     setToken("");
+  };
+  const getCurrentPlayingTrack = () => {
+    getCurrentTrack(token);
+  };
+
+  const playTrackByTrackId = () => {
+    playTrackById(token, "2o002vjoIgeX0Ho2aCWR1N");
   };
 
   const handleSearchResult = (result: any[]) => {
@@ -55,6 +65,8 @@ const App: React.FC = () => {
           </main>
           <div className="content h-[90%]" style={{ borderRadius: "inherit" }}>
             {/* Render search results here */}
+            <div onClick={getCurrentPlayingTrack}>show</div>
+            <div onClick={playTrackByTrackId}>play track</div>
             <div className="grid xl:grid-cols-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {searchResult
                 ? searchResult.map((artist) => (
