@@ -3,6 +3,7 @@ import "./index.css";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Player from "./components/Player";
+import ArtistCard from "./components/ArtistCard";
 import { useEffect, useState } from "react";
 // import { useQuery } from "react-query";
 import {
@@ -12,12 +13,14 @@ import {
   getAuthorization,
 } from "./services/auth";
 import { searchArtists } from "./services/artistService";
+import { Track } from "./types/Track";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>("");
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
   const [searchResult, setSearchResult] = useState<any[] | null>([]);
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
 
   useEffect(() => {
     const retrievedToken = getTokenFromHash();
@@ -36,28 +39,33 @@ const App: React.FC = () => {
     setSearchResult(result);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKey(event.target.value);
-    searchArtists(searchKey, token);
-    // setArtists(searchArtists(searchKey, token))
+  const playTrack = (track: Track) => {
+    setCurrentTrack(track);
   };
 
   return (
     <div className="flex flex-col h-[100%] ">
       <div className="flex flex-row h-[100%]">
-        <div className="w-[241px] h-[100%]">
+        <div className="w-[241px] min-w-[241px] h-[100%]">
           <Sidebar />
         </div>
-        <div className="w-[100%]">
+        <div className="w-[100%] ">
           <main className="flex-grow ">
             <Navbar onSearchResult={handleSearchResult} />
           </main>
-          <div>dddd</div>
+          <div className="content h-[90%]" style={{ borderRadius: "inherit" }}>
+            {/* Render search results here */}
+            <div className="grid xl:grid-cols-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {searchResult
+                ? searchResult.map((artist) => (
+                    <ArtistCard key={artist.id} artist={artist} />
+                  ))
+                : null}
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <Player />
-      </div>
+      <div>{currentTrack && <Player track={currentTrack} />}</div>
     </div>
   );
 };
