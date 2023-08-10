@@ -4,4 +4,5 @@ export type Track = {
   artist: string;
   album: string;
   url: string;
+  preview_url: string;
 };

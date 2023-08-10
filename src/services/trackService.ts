@@ -88,3 +88,31 @@ export const playTrackById = async (token: any, trackId: string) => {
     throw new Error("Error playing track");
   }
 };
+
+export const searchTracks = async (searchKey: string, token: any) => {
+  var result: any[] = [];
+  var parameters = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+
+  if (searchKey.length > 0) {
+    await fetch(
+      "https://api.spotify.com/v1/search?q=" + searchKey + "&type=track",
+      parameters
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.tracks.items);
+        if (data.tracks) {
+          result = data.tracks.items;
+        }
+      });
+  }
+
+  console.log(result);
+  return result;
+};

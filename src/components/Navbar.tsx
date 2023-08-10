@@ -8,6 +8,7 @@ import {
   getAuthorization,
 } from "../services/auth";
 import { searchArtists } from "../services/artistService";
+import { searchTracks } from "../services/trackService";
 
 interface NavbarProps {
   onSearchResult: (result: any[]) => void;
@@ -37,7 +38,8 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
     setSearchKey(newSearchKey);
 
     try {
-      const result = await searchArtists(newSearchKey, token);
+      // const result = await searchArtists(newSearchKey, token);
+      const result = await searchTracks(newSearchKey, token);
       onSearchResult(result); // Send the result to the parent component
     } catch (error) {
       console.error("Error searching artists:", error);
