@@ -64,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
   };
   return (
     <div>
-      <div className="bg-zinc-900 w-[100%] grid grid-cols-3 gap-1 h-14">
+      <div className="bg-zinc-900 w-[98%] grid grid-cols-3 gap-1 h-16 mx-4 mt-2 rounded-xl">
         {/* Arrows */}
         <div className=" flex flex-row gap-3 ml-4 self-center ">
           <div className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer">

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import HomePage from "./pages/homePage";
 import SearchPage from "./pages/searchPage";
 import LibraryPage from "./pages/libraryPage";
+import ArtistPage from "./pages/artistPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // import { useQuery } from "react-query";
@@ -58,7 +59,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[100%] ">
+    <div className="flex flex-col h-[100%] bg-black ">
       <div className="flex flex-row h-[100%]">
         <div className="w-[241px] min-w-[241px] h-[100%]">
           <Sidebar />
@@ -80,6 +81,12 @@ const App: React.FC = () => {
                 }
               />
               <Route path="/library" element={<LibraryPage />} />
+              <Route
+                path="/artist"
+                element={
+                  <ArtistPage token={token} onSelectTrack={handleSelectTrack} />
+                }
+              />
             </Routes>
           </Router>
         </div>

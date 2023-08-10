@@ -19,7 +19,7 @@ const SearchPage: React.FC<any> = ({
   const [searchResultsArtists, setSearchResultsArtists] = useState<
     any[] | null
   >([]);
-  const [searchResults, setSearchResults] = useState([]);
+  // const [searchResults, setSearchResults] = useState([]);
   // const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [playingTrack, setPlayingTrack] = useState<any | null>(null);
 
@@ -66,28 +66,28 @@ const SearchPage: React.FC<any> = ({
   };
   const token2 =
     "BQAdRat4OTXK2blRuqN86hldBnKkCkl52LC__IkA4M62xvqMtRQAW5XI0kzPPyZUod9EvIY4CQNXhqUzL1yTsg_3vpbxmjyrMgpvV0IJyXF2RD2Exw5LoxeOwaIsPyMU0V_zJvNAcdKBjvv0yGtSorTM_3JB_EEl6J2_4ycp-9zF9aNdkVxeWdMbp7mk53I3NdI6AY0u-K_-EeoFS_oBU4YA";
-  useEffect(() => {
-    // Player
+  // useEffect(() => {
+  //   // Player
 
-    (window as any).onSpotifyWebPlaybackSDKReady = () => {
-      const newPlayer = new window.Spotify.Player({
-        name: "spotify-like-app",
-        getOAuthToken: (cb: (token: string) => void) => {
-          cb(token2);
-        },
-      });
-      console.log("Spotify Web Playback SDK is ready!");
+  //   (window as any).onSpotifyWebPlaybackSDKReady = () => {
+  //     const newPlayer = new window.Spotify.Player({
+  //       name: "spotify-like-app",
+  //       getOAuthToken: (cb: (token: string) => void) => {
+  //         cb(token2);
+  //       },
+  //     });
+  //     console.log("Spotify Web Playback SDK is ready!");
 
-      newPlayer.addListener("ready", ({ device_id }) => {
-        newPlayer.connect(); // Connect the player once it's ready
-      });
-      newPlayer.addListener("player_state_changed", (state) => {
-        console.log("Player State Changed:", state);
-      });
+  //     newPlayer.addListener("ready", ({ device_id }) => {
+  //       newPlayer.connect(); // Connect the player once it's ready
+  //     });
+  //     newPlayer.addListener("player_state_changed", (state) => {
+  //       console.log("Player State Changed:", state);
+  //     });
 
-      setPlayer(newPlayer);
-    };
-  }, []);
+  //     setPlayer(newPlayer);
+  //   };
+  // }, []);
   const handleSearchTypeChange = (event: any) => {
     setSearchType(event.target.value);
     console.log(event.target.value);
@@ -316,7 +316,7 @@ const SearchPage: React.FC<any> = ({
   };
   return (
     <div
-      className="content h-[85%] flex flex-row"
+      className="content h-[85%] flex flex-row m-2 rounded-xl"
       style={{ borderRadius: "inherit" }}
     >
       <div className="player-container">
@@ -340,11 +340,16 @@ const SearchPage: React.FC<any> = ({
         )}
       </div>
       <div className="overflow-y-scroll max-h-[800px] w-3/4 mx-4 ">
-        <select value={searchType} onChange={handleSearchTypeChange}>
+        <select
+          className="bg-black text-white border border-white py-2 px-4 rounded appearance-none"
+          value={searchType}
+          onChange={handleSearchTypeChange}
+        >
           <option value="all">All</option>
           <option value="track">Tracks</option>
           <option value="artist">Artists</option>
         </select>
+
         <div>
           {searchResultsArtists && searchResultsArtists?.length > 0 ? (
             <div className="text-2xl my-6">Artists</div>
@@ -366,7 +371,7 @@ const SearchPage: React.FC<any> = ({
               ? searchResultsTracks.map((track, index) => (
                   <div>
                     <div
-                      className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
+                      className={`grid items-center grid-cols-5 gap-4 p-4 rounded-lg ${
                         playingTrack?.id === track?.id
                           ? "bg-zinc-900"
                           : "hover:bg-zinc-800"
@@ -399,9 +404,6 @@ const SearchPage: React.FC<any> = ({
                           .toFixed(0)
                           .toString()
                           .padStart(2, "0")}
-                      </div>
-                      <div>
-                        <button onClick={() => setTrack(track)}>Play</button>
                       </div>
                     </div>
                   </div>
