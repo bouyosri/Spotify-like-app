@@ -52,7 +52,5 @@ export const getAuthorization = async () => {
   const data = await fetch(
     "https://accounts.spotify.com/api/token",
     authParameters
-  )
-    .then((response) => response.json())
-    .then((data) => console.log(data));
+  ).then((response) => response.json());
 };

@@ -2,13 +2,15 @@ import React from "react";
 import "./index.css";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
-import PlayerComponent from "./components/Player";
 import ArtistCard from "./components/ArtistCard";
+import Player from "./components/Player";
 import { useEffect, useState } from "react";
+import homePage from "./pages/homePage";
+import searchPage from "./pages/searchPage";
+
 // import { useQuery } from "react-query";
 import {
   getTokenFromHash,
-  logout,
   getAuthorizationUrl,
   getAuthorization,
   getAuthorizationUrlToGetCurrentTrack,
@@ -38,118 +40,191 @@ const App: React.FC = () => {
     getAuthorizationUrlToGetCurrentTrack();
   }, []);
   const token2 =
-    "BQAlJ6dr68zCwmAuYLOTP2gFiw3o2QuacUOsmLgx7mFK-hw0QWTqvJ7ijin2mJDxI2-Prncsd8xcrnjcHybqFF6AvMYSS3me2Kep17onCI1f9LPo4LpPvX3q5V5pVqAm-32vb1VP1ijumf050YrbVNv73mpexTLc4uYHByFaEz-4BOHDSKJNrgMTir6pnghQ_R5f9GOnf0631vW3GAKOnY_t";
+    "BQAdRat4OTXK2blRuqN86hldBnKkCkl52LC__IkA4M62xvqMtRQAW5XI0kzPPyZUod9EvIY4CQNXhqUzL1yTsg_3vpbxmjyrMgpvV0IJyXF2RD2Exw5LoxeOwaIsPyMU0V_zJvNAcdKBjvv0yGtSorTM_3JB_EEl6J2_4ycp-9zF9aNdkVxeWdMbp7mk53I3NdI6AY0u-K_-EeoFS_oBU4YA";
+  useEffect(() => {
+    // Player
 
-  // useEffect(() => {
-  //   // Player
+    (window as any).onSpotifyWebPlaybackSDKReady = () => {
+      const newPlayer = new window.Spotify.Player({
+        name: "spotify-like-app",
+        getOAuthToken: (cb: (token: string) => void) => {
+          cb(token2);
+        },
+      });
+      console.log("Spotify Web Playback SDK is ready!");
 
-  //   (window as any).onSpotifyWebPlaybackSDKReady = () => {
-  //     console.log("SDK ready!");
-  //     const newPlayer = new window.Spotify.Player({
-  //       name: "spotify-like-app",
-  //       getOAuthToken: (cb: (token: string) => void) => {
-  //         cb(token2);
-  //       },
-  //     });
-  //     console.log("Spotify Web Playback SDK is ready!");
+      newPlayer.addListener("ready", ({ device_id }) => {
+        newPlayer.connect(); // Connect the player once it's ready
+      });
+      newPlayer.addListener("player_state_changed", (state) => {
+        console.log("Player State Changed:", state);
+      });
 
-  //     newPlayer.addListener("ready", ({ device_id }) => {
-  //       console.log("Device ID", device_id);
+      setPlayer(newPlayer);
+    };
+  }, []);
 
-  //       newPlayer.connect(); // Connect the player once it's ready
-  //     });
-  //     newPlayer.addListener("player_state_changed", (state) => {
-  //       console.log("Player State Changed:", state);
-  //     });
+  const initializeSpotifyPlayer = async (track: any) => {
+    // Load the Spotify Web Playback SDK script
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
 
-  //     setPlayer(newPlayer);
-  //     const playTrack = async (trackId: any) => {
-  //       try {
-  //         // Use the Spotify Web API to get the track information
-  //         const response = await fetch(
-  //           `https://api.spotify.com/v1/tracks/${trackId}`,
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${token2}`,
-  //             },
-  //           }
-  //         );
-  //         const trackData = await response.json();
+    script.onload = () => {
+      // Initialize the player
+      const newPlayer = new window.Spotify.Player({
+        name: "spotify-like-app",
+        getOAuthToken: (cb) => {
+          cb(token2);
+        },
+      });
+      newPlayer.addListener("ready", async ({ device_id }) => {
+        console.log("The Web Playback SDK is ready to play music!");
+        console.log("Device ID", device_id);
+      });
+      newPlayer.addListener("ready", async ({ device_id }) => {
+        try {
+          const response = await fetch(
+            `https://api.spotify.com/v1/tracks/${track.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token2}`,
+              },
+            }
+          );
+          const trackData = await response.json();
+          const trackUri = trackData.uri;
 
-  //         // Extract the track URI
-  //         const trackUri = trackData.uri;
+          const playResponse = await fetch(
+            `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token2}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                uris: [trackUri],
+              }),
+            }
+          );
 
-  //         // Use the Spotify Web Playback SDK to start playback
-  //         await player.resume();
-  //         await player.play({
-  //           uris: [trackUri],
-  //         });
+          if (playResponse.status === 204) {
+            console.log("Track is playing!");
+          } else {
+            console.error("Failed to play track.");
+          }
+        } catch (error) {
+          console.error("Error playing track:", error);
+        }
+        try {
+          // Fetch track data using the track ID
+          const response = await fetch(
+            `https://api.spotify.com/v1/tracks/${track.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token2}`,
+              },
+            }
+          );
+          const trackData = await response.json();
 
-  //         player.connect();
-  //         setPlayer(newPlayer);
-  //       } catch (error) {
-  //         console.error("Error playing track:", error);
-  //       }
-  //     };
+          // Extract the track URI
+          const trackUri = trackData.uri;
 
-  //     newPlayer.addListener("ready", ({ device_id }) => {
-  //       console.log("Device ID", device_id);
+          // Use the Spotify Web Playback SDK to play the track
+          setPlayer(newPlayer);
+          console.log(player);
+          await player.play({
+            uris: [trackUri],
+          });
 
-  //       // Provide the track ID you want to play
-  //       const trackId = "2o002vjoIgeX0Ho2aCWR1N";
+          console.log("Track is playing!");
+        } catch (error) {
+          console.error("Error playing track:", error);
+        }
+      });
+      setPlayer(newPlayer);
 
-  //       // Start playback of the specified track
-  //       playTrack(trackId);
-  //     });
+      player.getCurrentState().then((state: any) => {
+        if (!state) {
+          console.error(
+            "User is not playing music through the Web Playback SDK"
+          );
+          return;
+        }
 
-  //   };
-  // }, [token2, setPlayer]);
+        var current_track = state.track_window.current_track;
+        var next_track = state.track_window.next_tracks[0];
 
-  // if (player) console.log(player);
+        console.log("Currently Playing", current_track);
+        console.log("Playing Next", next_track);
+      });
 
-  // useEffect(() => {
-  //   const initializeSpotifyPlayer = async () => {
-  //     // Load the Spotify Web Playback SDK script
-  //     const script = document.createElement("script");
-  //     script.src = "https://sdk.scdn.co/spotify-player.js";
-  //     script.async = true;
-  //     document.body.appendChild(script);
+      newPlayer.connect();
+    };
 
-  //     // Wait for the Spotify Web Playback SDK to be ready
-  //     script.onload = () => {
-  //       // Initialize the player
-  //       const newPlayer = new window.Spotify.Player({
-  //         name: "spotify-like-app",
-  //         getOAuthToken: (cb) => {
-  //           cb(token2);
-  //         },
-  //       });
+    script.onerror = () => {
+      console.error("Failed to load Spotify Web Playback SDK.");
+    };
 
-  //       newPlayer.addListener("ready", ({ device_id }) => {
-  //         console.log("Device ID", device_id);
+    // Append the script to the document body to start loading
+    document.body.appendChild(script);
+  };
 
-  //         // Play a track when the player is ready
-  //         playTrack(newPlayer, "YOUR_TRACK_ID_HERE"); // Replace with the track ID you want to play
-  //       });
+  if (player) {
+    player.addListener("player_state_changed", (state: any) => {
+      console.log("Player State Changed:", state);
 
-  //       newPlayer.addListener("player_state_changed", (state) => {
-  //         console.log("Player State Changed:", state);
-  //         // Update UI or perform actions based on the state
-  //       });
+      if (state && state.track_window && state.track_window.current_track) {
+        console.log("A track is currently playing.");
+      } else {
+        console.log("No track is currently playing.");
+      }
 
-  //       newPlayer.connect(); // Connect the player once it's ready
-  //       setPlayer(newPlayer);
-  //     };
-  //   };
-
-  //   initializeSpotifyPlayer();
-  // }, []);
-
-  const playTrack = async (playerInstance: any, trackId: string) => {
+      // Update UI or perform actions based on the state
+    });
+  }
+  const playAlbumTrack = async (albumUri: string, position: number) => {
     try {
-      // Use the Spotify Web API to get the track information
       const response = await fetch(
-        `https://api.spotify.com/v1/tracks/${trackId}`,
+        "https://api.spotify.com/v1/me/player/play",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token2}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            context_uri: "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr",
+            offset: {
+              position: position,
+            },
+            position_ms: 0,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Album track is playing!");
+      } else {
+        console.error("Failed to play album track");
+      }
+    } catch (error) {
+      console.error("Error playing album track:", error);
+    }
+  };
+
+  // Usage
+  const albumUri = "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr"; // Replace with your album URI
+  const position = 5; // Replace with the desired position
+
+  playAlbumTrack(albumUri, position);
+
+  const playTrack = async (playerInstance: any, track: string) => {
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/tracks/` + track,
         {
           headers: {
             Authorization: `Bearer ${token2}`,
@@ -158,13 +233,8 @@ const App: React.FC = () => {
       );
       const trackData = await response.json();
 
-      // Extract the track URI
       const trackUri = trackData.uri;
 
-      // Use the Spotify Web Playback SDK to start playback
-      await playerInstance.togglePlay();
-
-      // After starting playback, play the specified track
       await playerInstance.play({
         uris: [trackUri],
       });
@@ -182,14 +252,6 @@ const App: React.FC = () => {
     }
   }, [player]);
 
-  // const getCurrentPlayingTrack = () => {
-  //   getCurrentTrack(token);
-  // };
-
-  // const playTrackByTrackId = () => {
-  //   playTrackById(token, "2o002vjoIgeX0Ho2aCWR1N");
-  // };
-
   const handleSearchResult = (result: any[]) => {
     console.log(result);
     setSearchResult(result);
@@ -197,14 +259,12 @@ const App: React.FC = () => {
 
   const handlePlayPause = () => {
     if (player) {
-      // player.addListener("ready", ({ device_id }) => {
-      //   console.log("Device ID", device_id);
-
-      //   player.connect(); // Connect the player once it's ready
-      // });
       if (player._options.id === player._options.activeDeviceId) {
         player.togglePlay();
       }
+      player.pause().then(() => {
+        console.log("Paused!");
+      });
     }
   };
 
@@ -216,20 +276,14 @@ const App: React.FC = () => {
     }
   };
   const volumeUp = () => {
-    // playTrack("2o002vjoIgeX0Ho2aCWR1N");
-    player.setVolume(0.5).then(() => {
+    player.setVolume(1).then(() => {
       console.log("Volume updated!");
     });
   };
 
-  // const playTrack = (track: Track) => {
-  //   setCurrentTrack(track);
-  // };
-
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const [test, setTest] = useState(0);
   const setTrack = (track: any) => {
+    initializeSpotifyPlayer(track);
     setTest(test + 1);
     console.log(track);
     setPlayingTrack(track);
@@ -250,7 +304,6 @@ const App: React.FC = () => {
             style={{ borderRadius: "inherit" }}
           >
             <div className="player-container">
-              <PlayerComponent />
               {player && (
                 <div className="player">
                   <img
@@ -270,8 +323,6 @@ const App: React.FC = () => {
                 </div>
               )}
             </div>
-            {/* <div onClick={getCurrentPlayingTrack}>show</div>
-            <div onClick={playTrackByTrackId}>play track</div> */}
             <div className="overflow-y-scroll max-h-[800px] w-3/4 ">
               <div className="grid items-center grid-cols-7 gap-4 p-4 rounded-lg ">
                 <div>#</div>
@@ -376,38 +427,7 @@ const App: React.FC = () => {
         style={{ zIndex: 5, position: "fixed", bottom: 0, left: 0, right: 0 }}
         className="bg-black h-[100px] w-[100%]"
       >
-        {playingTrack ? (
-          <div className="player bg-black grid grid-cols-2 items-center">
-            <div className="flex flex-row items-center">
-              <div className="mt-[6px] ml-[6px]">
-                <img
-                  src={playingTrack.album.images[0].url}
-                  alt=""
-                  className="w-[80px] h-[80px] rounded-lg"
-                />
-              </div>
-              <div className="flex flex-col ml-4 align-middle self-center">
-                <div className="text-white">{playingTrack.name}</div>
-                <div className="text-stone-600">
-                  {playingTrack.artists[0].name}
-                </div>
-              </div>
-
-              <button onClick={handlePlayPause}>
-                {isPlaying ? "Pause" : "Play"}
-              </button>
-            </div>
-            <div>
-              <audio controls autoPlay={isPlaying}>
-                <source src={playingTrack.preview_url} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        ) : null}
-        {/* <Player /> */}
-        {/* <div>{playingTrack && <Player track={playingTrack} />}</div> */}
-        <PlayerComponent />
+        {playingTrack ? <Player playingTrack={playingTrack} /> : null}
       </div>
     </div>
   );
