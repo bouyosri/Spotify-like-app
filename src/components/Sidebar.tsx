@@ -11,34 +11,49 @@ const Sidebar: React.FC = () => {
         />
         <ul className="text-sm text-gray-400 flex flex-col gap-3">
           <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <div>
-              <img
-                src="images/home.svg"
-                alt="Spotify Logo"
-                className="w-[24px] h-[24px] "
-              />
-            </div>
-            <div className="">Home</div>
+            <a
+              href="/"
+              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
+            >
+              <div>
+                <img
+                  src="images/home.svg"
+                  alt="Spotify Logo"
+                  className="w-[24px] h-[24px] "
+                />
+              </div>
+              <div className="">Home</div>
+            </a>
           </li>
           <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <div>
-              <img
-                src="images/search.svg"
-                alt="Spotify Logo"
-                className="w-[24px] h-[24px] "
-              />
-            </div>
-            <div className="">Search</div>
+            <a
+              href="/search"
+              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
+            >
+              <div>
+                <img
+                  src="images/search.svg"
+                  alt="Spotify Logo"
+                  className="w-[24px] h-[24px] "
+                />
+              </div>
+              <div className="">Search</div>
+            </a>
           </li>
           <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <div>
-              <img
-                src="images/library.svg"
-                alt="Spotify Logo"
-                className="w-[24px] h-[24px] "
-              />
-            </div>
-            <div className="">Your Library</div>
+            <a
+              href="/library"
+              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
+            >
+              <div>
+                <img
+                  src="images/library.svg"
+                  alt="Spotify Logo"
+                  className="w-[24px] h-[24px] "
+                />
+              </div>
+              <div className="">Your Library</div>
+            </a>
           </li>
         </ul>
         <div className="text-white  mt-10 ">

@@ -1,5 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 // import { useQuery } from "react-query";
 import {
   getTokenFromHash,
@@ -9,6 +11,7 @@ import {
 } from "../services/auth";
 import { searchArtists } from "../services/artistService";
 import { searchTracks } from "../services/trackService";
+import { useLocation } from "react-router-dom";
 
 interface NavbarProps {
   onSearchResult: (result: any[]) => void;
@@ -18,7 +21,14 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
   const [token, setToken] = useState<string | null>("");
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
+  const navigate = useNavigate();
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const query = searchParams.get("query");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  // setSearchKey(query)
   useEffect(() => {
     const retrievedToken = getTokenFromHash();
     setToken(retrievedToken);
@@ -31,18 +41,25 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
     setToken("");
   };
 
-  const handleSearchChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newSearchKey = event.target.value;
-    setSearchKey(newSearchKey);
+  // const handleSearchChange = async (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const newSearchKey = event.target.value;
+  //   setSearchKey(newSearchKey);
 
-    try {
-      // const result = await searchArtists(newSearchKey, token);
-      const result = await searchTracks(newSearchKey, token);
-      onSearchResult(result); // Send the result to the parent component
-    } catch (error) {
-      console.error("Error searching artists:", error);
+  //   try {
+  //     // const result = await searchArtists(newSearchKey, token);
+  //     const result = await searchTracks(newSearchKey, token);
+  //     onSearchResult(result); // Send the result to the parent component
+  //     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+  //   } catch (error) {
+  //     console.error("Error searching artists:", error);
+  //   }
+  // };
+
+  const handleSearchChange = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
   };
   return (
@@ -71,20 +88,23 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
         </div>
         {/* Search Bar */}
         <div className=" flex flex-row gap-3 ml-[-100px] self-center bg-white px-8 py-3 rounded-full w-[350px]">
-          <div className="mt-[0px] ml-[0px]">
+          <button className="mt-[0px] ml-[0px]" onClick={handleSearchChange}>
             <img
               src="images/search-icon.svg"
               alt=""
               className="w-[24px] h-[24px] "
             />
-          </div>
+          </button>
           <div className="">
             <input
               className="w-[250px]"
               type="text"
               placeholder="What do you want to listen to?"
-              value={searchKey}
-              onChange={handleSearchChange} // Call the function on input change
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onSubmit={handleSearchChange}
+              // value={searchKey}
+              // Call the function on input change
             />
           </div>
         </div>

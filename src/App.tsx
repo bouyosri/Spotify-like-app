@@ -5,8 +5,10 @@ import Navbar from "./components/Navbar";
 import ArtistCard from "./components/ArtistCard";
 import Player from "./components/Player";
 import { useEffect, useState } from "react";
-import homePage from "./pages/homePage";
-import searchPage from "./pages/searchPage";
+import HomePage from "./pages/homePage";
+import SearchPage from "./pages/searchPage";
+import LibraryPage from "./pages/libraryPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // import { useQuery } from "react-query";
 import {
@@ -253,8 +255,12 @@ const App: React.FC = () => {
   }, [player]);
 
   const handleSearchResult = (result: any[]) => {
-    console.log(result);
+    // console.log(result);
     setSearchResult(result);
+  };
+  const handleSelectTrack = (track: any) => {
+    // console.log("from app", track);
+    setPlayingTrack(track);
   };
 
   const handlePlayPause = () => {
@@ -296,130 +302,24 @@ const App: React.FC = () => {
           <Sidebar />
         </div>
         <div className="w-[100%] ">
-          <main className="flex-grow ">
+          <main className="flex-grow "></main>
+          <Router>
             <Navbar onSearchResult={handleSearchResult} />
-          </main>
-          <div
-            className="content h-[85%] flex flex-row"
-            style={{ borderRadius: "inherit" }}
-          >
-            <div className="player-container">
-              {player && (
-                <div className="player">
-                  <img
-                    src="https://via.placeholder.com/100"
-                    alt="Album Cover"
-                    className="album-cover"
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/search"
+                element={
+                  <SearchPage
+                    token={token}
+                    onSearchResult={handleSearchResult}
+                    onSelectTrack={handleSelectTrack}
                   />
-                  <div className="track-info">
-                    <div className="track-name">Track Name</div>
-                    <div className="artist-name">Artist Name</div>
-                  </div>
-                  <div className="player-controls">
-                    <button onClick={handlePlayPause}>Play/Pause</button>
-                    <button onClick={handleNext}>Next</button>
-                    <button onClick={volumeUp}>Volume up</button>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="overflow-y-scroll max-h-[800px] w-3/4 ">
-              <div className="grid items-center grid-cols-7 gap-4 p-4 rounded-lg ">
-                <div>#</div>
-                <div>name</div>
-                <div>artist</div>
-                <div>album</div>
-                <div>duration</div>
-              </div>
-
-              {searchResult
-                ? searchResult.map((track, index) => (
-                    <div>
-                      <div
-                        className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
-                          playingTrack?.id === track?.id
-                            ? "bg-zinc-900"
-                            : "hover:bg-zinc-800"
-                        }`}
-                        onDoubleClick={() => setTrack(track)}
-                      >
-                        <div className="flex flex-row items-center gap-4">
-                          {index + 1}
-                          <div className="rounded-full">
-                            <img
-                              src={track.album.images[0].url}
-                              alt=""
-                              className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
-                            />
-                          </div>
-                        </div>
-                        <div className="truncate max-w-[250px]">
-                          {track.name}
-                        </div>
-                        <div className="truncate max-w-[250px]">
-                          {track.artists[0].name}
-                        </div>
-                        <div className="truncate max-w-[250px]">
-                          {track.album.name}
-                        </div>
-                        <div>
-                          {Math.floor(track.duration_ms / 60000)
-                            .toString()
-                            .padStart(2, "0")}
-                          :
-                          {((track.duration_ms % 60000) / 1000)
-                            .toFixed(0)
-                            .toString()
-                            .padStart(2, "0")}
-                        </div>
-                        <div>
-                          <button onClick={() => setTrack(track)}>Play</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                : null}
-            </div>
-            <div className="overflow-y-scroll bg-[#181818] rounded-md max-h-[750px] w-1/4 ">
-              {playingTrack ? (
-                <div className="mx-4">
-                  <div className=" bg-[#181818]  cursor-pointer p-4 shadow-md rounded-md">
-                    <img
-                      src={
-                        playingTrack.album.images[0]
-                          ? playingTrack.album.images[0]?.url
-                          : "images/artist.png"
-                      } // Replace with your default image URL
-                      alt={playingTrack.artists[0].name}
-                      className="w-96 h-96 rounded-md mx-auto mb-4"
-                    />
-                    <h3 className="text-lg font-semibold">
-                      {playingTrack.name}
-                    </h3>
-                    <p className="text-gray-300 mt-1">
-                      {playingTrack.artists[0].name}
-                    </p>
-                  </div>
-
-                  <div className="bg-[#181818] cursor-pointer p-4 shadow-md rounded-md relative group">
-                    <img
-                      src={"images/artist.png"} // Replace with your default image URL
-                      alt={playingTrack.artists[0].name}
-                      className="w-96 h-96 rounded-md mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity"
-                    />
-                    <div className="absolute bottom-8 left-4 p-2 text-white group-hover:text-zinc-700">
-                      <h3 className="text-lg font-semibold">
-                        {playingTrack.artists[0].name}
-                      </h3>
-                      <p className="mt-1 text-white group-hover:text-zinc-700">
-                        {playingTrack.artists[0].type}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </div>
+                }
+              />
+              <Route path="/library" element={<LibraryPage />} />
+            </Routes>
+          </Router>
         </div>
       </div>
 
