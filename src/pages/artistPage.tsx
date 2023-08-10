@@ -66,7 +66,7 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
   };
 
   return (
-    <div className="w-[98%] h-[90%] bg-[#181818] m-4 rounded-xl overflow-y-scroll max-h-[98%]">
+    <div className="w-[98%] h-[90%] bg-[#181818] text-white m-4 rounded-xl overflow-y-scroll max-h-[98%]">
       {artist && (
         <div className="bg-[#202020]  p-4 shadow-md ">
           <img

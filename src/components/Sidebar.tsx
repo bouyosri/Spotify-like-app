@@ -33,7 +33,8 @@ const Sidebar: React.FC<any> = ({ user }) => {
     getUserPlaylist();
   };
   const getUserPlaylist = async () => {
-    const result = await getUserPlaylists(token, user.id);
+    var result = [];
+    if (user) result = await getUserPlaylists(token, user.id);
     // setUser(result);
     setUserPlaylist(result);
     console.log(result);
@@ -124,19 +125,23 @@ const Sidebar: React.FC<any> = ({ user }) => {
           <ul className="text-sm text-gray-400 flex flex-col gap-3">
             {userPlaylist && userPlaylist.length > 0
               ? userPlaylist.map((item: any) => (
-                  <li className=" hover:text-white cursor-pointer flex flex-row gap-3 rounded-full">
-                    <div className="bg-white w-[50px] h-[50px] rounded-sm grid">
-                      <img
-                        src={item.images[0].url}
-                        alt="Spotify Logo"
-                        className="w-[50px] h-[50px] self-center justify-self-center"
-                      />
-                    </div>
-                    <div className="flex flex-col align-middle self-center">
-                      <div className="text-white">{item.name}</div>
-                      <div className="">{capitalizeFirstLetter(item.type)}</div>
-                    </div>
-                  </li>
+                  <a href={"/playlist?id=" + item.id}>
+                    <li className=" hover:text-white cursor-pointer flex flex-row gap-3 rounded-full">
+                      <div className="bg-white w-[50px] h-[50px] rounded-sm grid">
+                        <img
+                          src={item.images[0].url}
+                          alt="Spotify Logo"
+                          className="w-[50px] h-[50px] self-center justify-self-center"
+                        />
+                      </div>
+                      <div className="flex flex-col align-middle self-center">
+                        <div className="text-white">{item.name}</div>
+                        <div className="">
+                          {capitalizeFirstLetter(item.type)}
+                        </div>
+                      </div>
+                    </li>
+                  </a>
                 ))
               : null}
           </ul>

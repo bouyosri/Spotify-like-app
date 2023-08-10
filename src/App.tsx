@@ -9,6 +9,7 @@ import HomePage from "./pages/homePage";
 import SearchPage from "./pages/searchPage";
 import LibraryPage from "./pages/libraryPage";
 import ArtistPage from "./pages/artistPage";
+import PlaylistPage from "./pages/playlistPage";
 import { getUserProfile } from "./services/userService";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -97,6 +98,15 @@ const App: React.FC = () => {
                 path="/artist"
                 element={
                   <ArtistPage token={token} onSelectTrack={handleSelectTrack} />
+                }
+              />
+              <Route
+                path="/playlist"
+                element={
+                  <PlaylistPage
+                    token={token}
+                    onSelectTrack={handleSelectTrack}
+                  />
                 }
               />
             </Routes>

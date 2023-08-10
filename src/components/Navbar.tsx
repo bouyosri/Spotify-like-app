@@ -47,7 +47,8 @@ const Navbar: React.FC<any> = ({ user }) => {
     getUserPlaylist();
   };
   const getUserPlaylist = async () => {
-    const result = await getUserPlaylists(token, user.id);
+    var result = [];
+    if (user) result = await getUserPlaylists(token, user.id);
     // setUser(result);
     console.log(result);
   };
