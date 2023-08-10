@@ -1,52 +1,77 @@
-// import React, { useState } from "react";
-// import { Track } from "../types/Track";
+import React, { useEffect, useState } from "react";
 
-// const Player: React.FC = () => {
-//   return (
-//     <div className="bg-black">
-//       <div className=" text-white flex flex-col ml-8 h-[100px] ">q</div>
-//     </div>
-//   );
-// };
-
-// export default Player;
-
-// Player.tsx
-import React, { useState, useEffect } from "react";
-
-interface PlayerProps {
-  track: {
-    id: string;
-    name: string;
-    artist: string;
-    preview_url: string;
-    duration_ms: number;
-  };
-}
-
-const Player: React.FC<any> = ({ track }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+const PlayerComponent: React.FC = () => {
+  const [player, setPlayer] = useState<any | null>(null);
 
   useEffect(() => {
-    setIsPlaying(false); // Pause playback when a new track is loaded
-  }, [track.id]);
+    //Player
+    const token =
+      "BQCb7vKJZkOOIhtTq6KIbIdExY7KHOy1nV09abtLEQTn04fhZX6hFcFHLjTLAjCcHlzaT955wXyXMtUlWPdP0IWqsvPq8xNM9OPW1S3SgLbWykpBrorXh1iZwBGyGgpu2kyDsixpOTlHoTgr2PwyjN8xozvfgcbCYYN-hvwjbG7cLZOILktMUI8tVhFlnBLao95gPJ3L8EkD4gIyB3BzpyCo";
+
+    (window as any).onSpotifyWebPlaybackSDKReady = () => {
+      console.log("SDK ready!");
+      const newPlayer = new window.Spotify.Player({
+        name: "Your App Name",
+        getOAuthToken: (cb: (token: string) => void) => {
+          cb(token);
+        },
+      });
+      console.log("Spotify Web Playback SDK is ready!");
+
+      setPlayer(newPlayer);
+
+      // Connect to the player
+      newPlayer.connect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (player) {
+      // Subscribe to player events
+      player.addListener("player_state_changed", (state: any) => {
+        console.log("Current track:", state.track_window.current_track);
+      });
+    }
+  }, [player]);
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    if (player) {
+      if (player._options.id === player._options.activeDeviceId) {
+        player.togglePlay();
+      }
+    }
+  };
+
+  const handleNext = () => {
+    if (player) {
+      if (player._options.id === player._options.activeDeviceId) {
+        player.nextTrack();
+      }
+    }
   };
 
   return (
-    <div className="player">
-      <h2>Now Playing</h2>
-      <p>Track: {track.name}</p>
-      <p>Artist: {track.artist}</p>
-      <audio controls autoPlay={isPlaying}>
-        <source src={track.preview_url} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-      <button onClick={handlePlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+    <div className="player-container">
+      aze
+      {player && (
+        <div className="player">
+          <img
+            src="https://via.placeholder.com/100"
+            alt="Album Cover"
+            className="album-cover"
+          />
+          <div className="track-info">
+            <div className="track-name">Track Name</div>
+            <div className="artist-name">Artist Name</div>
+          </div>
+          <div className="player-controls">
+            <button onClick={handlePlayPause}>Play/Pause</button>
+            <button onClick={handleNext}>Next</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Player;
+export default PlayerComponent;
