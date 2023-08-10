@@ -1,6 +1,46 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+// import { useQuery } from "react-query";
+import {
+  getTokenFromHash,
+  logout,
+  getAuthorizationUrl,
+  getAuthorization,
+} from "../services/auth";
+import { searchArtists } from "../services/artistService";
+import { searchTracks } from "../services/trackService";
+import { useLocation } from "react-router-dom";
+import { getUserProfile } from "../services/userService";
+import { getUserPlaylists } from "../services/playlistService";
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<any> = ({ user }) => {
+  const [token, setToken] = useState<string | null>("");
+  const [user2, setUser] = useState<any | null>(null);
+  const [userPlaylist, setUserPlaylist] = useState<any | null>(null);
+  useEffect(() => {
+    const retrievedToken = getTokenFromHash();
+    setToken(retrievedToken);
+    // searchArtists();
+    getAuthorization();
+    getUser();
+  }, [user]);
+  const getUser = async () => {
+    const result = await getUserProfile(token);
+    setUser(result);
+    console.log(result);
+    getUserPlaylist();
+  };
+  const getUserPlaylist = async () => {
+    const result = await getUserPlaylists(token, user.id);
+    // setUser(result);
+    setUserPlaylist(result);
+    console.log(result);
+  };
+  const capitalizeFirstLetter = (text: string) => {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
   return (
     <div className="bg-[#181818] h-[100%] m-2 rounded-xl fixed min-w-[241px] w-[241px]">
       <div className=" text-white flex flex-col ml-8 ">
@@ -78,6 +118,27 @@ const Sidebar: React.FC = () => {
               </div>
               <div className="">Liked Songs</div>
             </li>
+          </ul>
+        </div>
+        <div className="text-white  mt-10 ">
+          <ul className="text-sm text-gray-400 flex flex-col gap-3">
+            {userPlaylist && userPlaylist.length > 0
+              ? userPlaylist.map((item: any) => (
+                  <li className=" hover:text-white cursor-pointer flex flex-row gap-3 rounded-full">
+                    <div className="bg-white w-[50px] h-[50px] rounded-sm grid">
+                      <img
+                        src={item.images[0].url}
+                        alt="Spotify Logo"
+                        className="w-[50px] h-[50px] self-center justify-self-center"
+                      />
+                    </div>
+                    <div className="flex flex-col align-middle self-center">
+                      <div className="text-white">{item.name}</div>
+                      <div className="">{capitalizeFirstLetter(item.type)}</div>
+                    </div>
+                  </li>
+                ))
+              : null}
           </ul>
         </div>
       </div>

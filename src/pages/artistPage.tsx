@@ -27,10 +27,10 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
 
   const getArtist = async () => {
     try {
-      console.log(token);
+      // console.log(token);
       const resultArtist = await getArtistById(artistId, token);
       if (resultArtist) setArtist(resultArtist);
-      console.log("artist", artist);
+      // console.log("artist", artist);
 
       if (token) await getArtistTopTracks(artistId, token);
     } catch (error) {
@@ -39,29 +39,29 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
   };
   const getArtistTopSongs = async () => {
     try {
-      console.log(token);
+      // console.log(token);
       const resultSongs = await getArtistTopTracks(artistId, token);
       const resultSossngs = await getArtistRelated(artistId, token);
       if (resultSongs) setTopSongs(resultSongs);
-      console.log("topSongs", topSongs);
-      console.log("artits alike", resultSossngs);
+      // console.log("topSongs", topSongs);
+      // console.log("artits alike", resultSossngs);
     } catch (error) {
       console.error("Error searching tracks:", error);
     }
   };
   const getRelatedArtists = async () => {
     try {
-      console.log(token);
+      // console.log(token);
       const result = await getArtistRelated(artistId, token);
       if (result) setSimilarArtists(result);
-      console.log("similar", result);
+      // console.log("similar", result);
     } catch (error) {
       console.error("Error searching artists:", error);
     }
   };
 
   const setTrack = (track: any) => {
-    console.log(track);
+    // console.log(track);
     onSelectTrack(track);
   };
 
