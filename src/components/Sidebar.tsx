@@ -2,7 +2,7 @@ import React from "react";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="bg-black h-[100%] fixed min-w-[241px] w-[241px]">
+    <div className="bg-[#181818] h-[100%] m-2 rounded-xl fixed min-w-[241px] w-[241px]">
       <div className=" text-white flex flex-col ml-8 ">
         <img
           src="images/spotify-logo.svg"

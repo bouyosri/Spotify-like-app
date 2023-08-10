@@ -13,14 +13,17 @@ html {
 body {
   height: 100%;
   width: 100%;
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: CircularSpTitle, "CircularSpTitle-Tall", "CircularSp-Arab",
+    "CircularSp-Hebr", "CircularSp-Cyrl", "CircularSp-Grek", "CircularSp-Deva",
+    var(--fallback-fonts);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Helvetica Neue",
-    monospace;
+  font-family: CircularSpTitle, "CircularSpTitle-Tall", "CircularSp-Arab",
+    "CircularSp-Hebr", "CircularSp-Cyrl", "CircularSp-Grek", "CircularSp-Deva",
+    var(--fallback-fonts);
 }
 .content {
   background: linear-gradient(to bottom, #00000099, #121212);

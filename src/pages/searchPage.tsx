@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { searchArtists } from "../services/artistService";
 import { searchTracks } from "../services/trackService";
+import ArtistCard from "../components/ArtistCard";
 
 const SearchPage: React.FC<any> = ({
   token,
@@ -12,83 +13,86 @@ const SearchPage: React.FC<any> = ({
 }) => {
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
-  const [searchResult, setSearchResult] = useState<any[] | null>([]);
+  const [searchResultsTracks, setSearchResultsTracks] = useState<any[] | null>(
+    []
+  );
+  const [searchResultsArtists, setSearchResultsArtists] = useState<
+    any[] | null
+  >([]);
+  // const [searchResults, setSearchResults] = useState([]);
   // const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [playingTrack, setPlayingTrack] = useState<any | null>(null);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const query = new URLSearchParams(location.search).get("query") || "";
-  console.log(query);
+  const [searchType, setSearchType] = useState("all"); // Default to searching for tracks
 
   const [player, setPlayer] = useState<any | null>(null);
 
-  // const handleSearchChange = async (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const newSearchKey = event.target.value;
-  //   setSearchKey(newSearchKey);
-
-  //   try {
-  //     // const result = await searchArtists(newSearchKey, token);
-  //     const result = await searchTracks(newSearchKey, token);
-  //     onSearchResult(result); // Send the result to the parent component
-  //     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-  //   } catch (error) {
-  //     console.error("Error searching artists:", error);
-  //   }
-  // };
-
-  const [searchResults, setSearchResults] = useState([]);
-
   useEffect(() => {
     if (query) {
-      // Perform your search logic here
-      // Update the search results state using setSearchResults
-      // For example: setSearchResults([...searchResultsData]);
-
-      // Call the onSearchResult callback to pass the search results back to the parent
-      onSearchResult(searchResults);
+      // onSearchResult(searchResults);
 
       handleSearchChange();
     }
   }, [query]);
 
-  const handleSearchChange = async () => {
+  const handleSearchChange = async (search?: string) => {
     try {
-      // const result = await searchArtists(newSearchKey, token);
-      const result = await searchTracks(query, token);
-      onSearchResult(result); // Send the result to the parent component
-      console.log("from search", result);
-      setSearchResult(result);
+      const resultArtists = await searchArtists(query, token);
+      const resultTracks = await searchTracks(query, token);
+      onSearchResult(resultTracks); // Send the result to the parent component
+      if (search) {
+        //tracks
+        if (search == "all") setSearchResultsTracks(resultTracks.slice(0, 5));
+        else if (search == "track") setSearchResultsTracks(resultTracks);
+        else setSearchResultsTracks([]);
+        //artists
+        if (search == "all") setSearchResultsArtists(resultArtists.slice(0, 5));
+        else if (search == "artist") setSearchResultsArtists(resultArtists);
+        else setSearchResultsArtists([]);
+      } else {
+        setSearchResultsTracks(resultTracks);
+        setSearchResultsArtists(resultArtists);
+      }
+
+      console.log("searchResultsArtists", searchResultsArtists);
+      console.log("earchResultstracks", searchResultsTracks);
+      console.log("type", search);
     } catch (error) {
       console.error("Error searching artists:", error);
     }
   };
   const token2 =
     "BQAdRat4OTXK2blRuqN86hldBnKkCkl52LC__IkA4M62xvqMtRQAW5XI0kzPPyZUod9EvIY4CQNXhqUzL1yTsg_3vpbxmjyrMgpvV0IJyXF2RD2Exw5LoxeOwaIsPyMU0V_zJvNAcdKBjvv0yGtSorTM_3JB_EEl6J2_4ycp-9zF9aNdkVxeWdMbp7mk53I3NdI6AY0u-K_-EeoFS_oBU4YA";
-  useEffect(() => {
-    // Player
+  // useEffect(() => {
+  //   // Player
 
-    (window as any).onSpotifyWebPlaybackSDKReady = () => {
-      const newPlayer = new window.Spotify.Player({
-        name: "spotify-like-app",
-        getOAuthToken: (cb: (token: string) => void) => {
-          cb(token2);
-        },
-      });
-      console.log("Spotify Web Playback SDK is ready!");
+  //   (window as any).onSpotifyWebPlaybackSDKReady = () => {
+  //     const newPlayer = new window.Spotify.Player({
+  //       name: "spotify-like-app",
+  //       getOAuthToken: (cb: (token: string) => void) => {
+  //         cb(token2);
+  //       },
+  //     });
+  //     console.log("Spotify Web Playback SDK is ready!");
 
-      newPlayer.addListener("ready", ({ device_id }) => {
-        newPlayer.connect(); // Connect the player once it's ready
-      });
-      newPlayer.addListener("player_state_changed", (state) => {
-        console.log("Player State Changed:", state);
-      });
+  //     newPlayer.addListener("ready", ({ device_id }) => {
+  //       newPlayer.connect(); // Connect the player once it's ready
+  //     });
+  //     newPlayer.addListener("player_state_changed", (state) => {
+  //       console.log("Player State Changed:", state);
+  //     });
 
-      setPlayer(newPlayer);
-    };
-  }, []);
+  //     setPlayer(newPlayer);
+  //   };
+  // }, []);
+  const handleSearchTypeChange = (event: any) => {
+    setSearchType(event.target.value);
+    console.log(event.target.value);
+    handleSearchChange(event.target.value);
+  };
 
   const initializeSpotifyPlayer = async (track: any) => {
     // Load the Spotify Web Playback SDK script
@@ -278,11 +282,6 @@ const SearchPage: React.FC<any> = ({
     }
   }, [player]);
 
-  const handleSearchResult = (result: any[]) => {
-    console.log(result);
-    setSearchResult(result);
-  };
-
   const handlePlayPause = () => {
     if (player) {
       if (player._options.id === player._options.activeDeviceId) {
@@ -317,7 +316,7 @@ const SearchPage: React.FC<any> = ({
   };
   return (
     <div
-      className="content h-[85%] flex flex-row"
+      className="content h-[85%] flex flex-row m-2 rounded-xl"
       style={{ borderRadius: "inherit" }}
     >
       <div className="player-container">
@@ -340,61 +339,80 @@ const SearchPage: React.FC<any> = ({
           </div>
         )}
       </div>
-      <div className="overflow-y-scroll max-h-[800px] w-3/4 ">
-        <div className="grid items-center grid-cols-7 gap-4 p-4 rounded-lg ">
-          <div>#</div>
-          <div>name</div>
-          <div>artist</div>
-          <div>album</div>
-          <div>duration</div>
-        </div>
+      <div className="overflow-y-scroll max-h-[800px] w-3/4 mx-4 ">
+        <select
+          className="bg-black text-white border border-white py-2 px-4 rounded appearance-none"
+          value={searchType}
+          onChange={handleSearchTypeChange}
+        >
+          <option value="all">All</option>
+          <option value="track">Tracks</option>
+          <option value="artist">Artists</option>
+        </select>
 
-        {searchResult
-          ? searchResult.map((track, index) => (
-              <div>
-                <div
-                  className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
-                    playingTrack?.id === track?.id
-                      ? "bg-zinc-900"
-                      : "hover:bg-zinc-800"
-                  }`}
-                  onDoubleClick={() => setTrack(track)}
-                >
-                  <div className="flex flex-row items-center gap-4">
-                    {index + 1}
-                    <div className="rounded-full">
-                      <img
-                        src={track.album.images[0].url}
-                        alt=""
-                        className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
-                      />
+        <div>
+          {searchResultsArtists && searchResultsArtists?.length > 0 ? (
+            <div className="text-2xl my-6">Artists</div>
+          ) : null}
+          <div className="grid xl:grid-cols-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {searchResultsArtists
+              ? searchResultsArtists.map((artist, index) => (
+                  <div>
+                    <ArtistCard artist={artist} />
+                  </div>
+                ))
+              : null}
+          </div>
+          {searchResultsTracks && searchResultsTracks?.length > 0 ? (
+            <div className="text-2xl my-6">Tracks</div>
+          ) : null}
+          <div className="overflow-y-scroll max-h-[800px]  ">
+            {searchResultsTracks
+              ? searchResultsTracks.map((track, index) => (
+                  <div>
+                    <div
+                      className={`grid items-center grid-cols-5 gap-4 p-4 rounded-lg ${
+                        playingTrack?.id === track?.id
+                          ? "bg-zinc-900"
+                          : "hover:bg-zinc-800"
+                      }`}
+                      onDoubleClick={() => setTrack(track)}
+                    >
+                      <div className="flex flex-row items-center gap-4">
+                        {index + 1}
+                        <div className="rounded-full">
+                          <img
+                            src={track.album.images[0].url}
+                            alt=""
+                            className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
+                          />
+                        </div>
+                      </div>
+                      <div className="truncate max-w-[250px]">{track.name}</div>
+                      <div className="truncate max-w-[250px]">
+                        {track.artists[0].name}
+                      </div>
+                      <div className="truncate max-w-[250px]">
+                        {track.album.name}
+                      </div>
+                      <div>
+                        {Math.floor(track.duration_ms / 60000)
+                          .toString()
+                          .padStart(2, "0")}
+                        :
+                        {((track.duration_ms % 60000) / 1000)
+                          .toFixed(0)
+                          .toString()
+                          .padStart(2, "0")}
+                      </div>
                     </div>
                   </div>
-                  <div className="truncate max-w-[250px]">{track.name}</div>
-                  <div className="truncate max-w-[250px]">
-                    {track.artists[0].name}
-                  </div>
-                  <div className="truncate max-w-[250px]">
-                    {track.album.name}
-                  </div>
-                  <div>
-                    {Math.floor(track.duration_ms / 60000)
-                      .toString()
-                      .padStart(2, "0")}
-                    :
-                    {((track.duration_ms % 60000) / 1000)
-                      .toFixed(0)
-                      .toString()
-                      .padStart(2, "0")}
-                  </div>
-                  <div>
-                    <button onClick={() => setTrack(track)}>Play</button>
-                  </div>
-                </div>
-              </div>
-            ))
-          : null}
+                ))
+              : null}
+          </div>
+        </div>
       </div>
+
       <div className="overflow-y-scroll bg-[#181818] rounded-md max-h-[750px] w-1/4 ">
         {playingTrack ? (
           <div className="mx-4">
