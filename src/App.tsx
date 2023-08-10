@@ -9,6 +9,7 @@ import HomePage from "./pages/homePage";
 import SearchPage from "./pages/searchPage";
 import LibraryPage from "./pages/libraryPage";
 import ArtistPage from "./pages/artistPage";
+import { getUserProfile } from "./services/userService";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // import { useQuery } from "react-query";
@@ -32,13 +33,23 @@ const App: React.FC = () => {
   const [searchResult, setSearchResult] = useState<any[] | null>([]);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [playingTrack, setPlayingTrack] = useState<any | null>(null);
+  const [user, setUser] = useState<any | null>(null);
 
   const [player, setPlayer] = useState<any | null>(null);
 
   useEffect(() => {
     const retrievedToken = getTokenFromHash();
     setToken(retrievedToken);
-  }, []);
+    if (token) {
+      getUser();
+    }
+  }, [token]);
+
+  const getUser = async () => {
+    const result = await getUserProfile(token);
+    setUser(result);
+    console.log(result);
+  };
 
   useEffect(() => {
     if (player) {
@@ -61,13 +72,14 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col h-[100%] bg-black ">
       <div className="flex flex-row h-[100%]">
-        <div className="w-[241px] min-w-[241px] h-[100%]">
-          <Sidebar />
-        </div>
-        <div className="w-[100%] ">
-          <main className="flex-grow "></main>
-          <Router>
-            <Navbar onSearchResult={handleSearchResult} />
+        <Router>
+          <div className="w-[241px] min-w-[241px] h-[100%]">
+            <Sidebar user={user} />
+          </div>
+          <div className="w-[100%] ">
+            <main className="flex-grow "></main>
+
+            <Navbar onSearchResult={handleSearchResult} user={user} />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route
@@ -88,8 +100,8 @@ const App: React.FC = () => {
                 }
               />
             </Routes>
-          </Router>
-        </div>
+          </div>
+        </Router>
       </div>
 
       <div

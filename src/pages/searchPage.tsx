@@ -33,7 +33,7 @@ const SearchPage: React.FC<any> = ({
   useEffect(() => {
     if (query) {
       // onSearchResult(searchResults);
-
+      // console.log(user);
       handleSearchChange();
     }
   }, [query]);
@@ -64,6 +64,7 @@ const SearchPage: React.FC<any> = ({
       console.error("Error searching artists:", error);
     }
   };
+
   const token2 =
     "BQAdRat4OTXK2blRuqN86hldBnKkCkl52LC__IkA4M62xvqMtRQAW5XI0kzPPyZUod9EvIY4CQNXhqUzL1yTsg_3vpbxmjyrMgpvV0IJyXF2RD2Exw5LoxeOwaIsPyMU0V_zJvNAcdKBjvv0yGtSorTM_3JB_EEl6J2_4ycp-9zF9aNdkVxeWdMbp7mk53I3NdI6AY0u-K_-EeoFS_oBU4YA";
   // useEffect(() => {

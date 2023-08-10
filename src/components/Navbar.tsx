@@ -12,12 +12,10 @@ import {
 import { searchArtists } from "../services/artistService";
 import { searchTracks } from "../services/trackService";
 import { useLocation } from "react-router-dom";
+import { getUserProfile } from "../services/userService";
+import { getUserPlaylists } from "../services/playlistService";
 
-interface NavbarProps {
-  onSearchResult: (result: any[]) => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
+const Navbar: React.FC<any> = ({ user }) => {
   const [token, setToken] = useState<string | null>("");
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
@@ -26,6 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const query = searchParams.get("query");
+  const [user2, setUser] = useState<any | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   // setSearchKey(query)
@@ -34,28 +33,24 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchResult }) => {
     setToken(retrievedToken);
     // searchArtists();
     getAuthorization();
-  }, []);
+    getUser();
+  }, [user]);
 
   const handleLogout = () => {
     logout();
     setToken("");
   };
-
-  // const handleSearchChange = async (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const newSearchKey = event.target.value;
-  //   setSearchKey(newSearchKey);
-
-  //   try {
-  //     // const result = await searchArtists(newSearchKey, token);
-  //     const result = await searchTracks(newSearchKey, token);
-  //     onSearchResult(result); // Send the result to the parent component
-  //     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-  //   } catch (error) {
-  //     console.error("Error searching artists:", error);
-  //   }
-  // };
+  const getUser = async () => {
+    const result = await getUserProfile(token);
+    setUser(result);
+    console.log(result);
+    getUserPlaylist();
+  };
+  const getUserPlaylist = async () => {
+    const result = await getUserPlaylists(token, user.id);
+    // setUser(result);
+    console.log(result);
+  };
 
   const handleSearchChange = () => {
     if (searchQuery.trim() !== "") {
