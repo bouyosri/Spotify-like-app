@@ -1,50 +1,47 @@
-// import React, { useState } from "react";
-// import { Track } from "../types/Track";
-
-// const Player: React.FC = () => {
-//   return (
-//     <div className="bg-black">
-//       <div className=" text-white flex flex-col ml-8 h-[100px] ">q</div>
-//     </div>
-//   );
-// };
-
-// export default Player;
-
-// Player.tsx
-import React, { useState, useEffect } from "react";
+// components/AlbumPlayer.tsx
+import React, { useEffect, useState } from "react";
 
 interface PlayerProps {
-  track: {
-    id: string;
-    name: string;
-    artist: string;
-    preview_url: string;
-    duration_ms: number;
-  };
+  playingTrack: any;
 }
 
-const Player: React.FC<any> = ({ track }) => {
+const Player: React.FC<PlayerProps> = ({ playingTrack }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    setIsPlaying(false); // Pause playback when a new track is loaded
-  }, [track.id]);
-
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    // if (player) {
+    //   if (player._options.id === player._options.activeDeviceId) {
+    //     player.togglePlay();
+    //   }
+    //   player.pause().then(() => {
+    //     console.log("Paused!");
+    //   });
+    // }
   };
-
   return (
-    <div className="player">
-      <h2>Now Playing</h2>
-      <p>Track: {track.name}</p>
-      <p>Artist: {track.artist}</p>
-      <audio controls autoPlay={isPlaying}>
-        <source src={track.preview_url} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-      <button onClick={handlePlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+    <div className="player bg-black grid grid-cols-2 items-center">
+      <div className="flex flex-row items-center">
+        <div className="mt-[6px] ml-[6px]">
+          <img
+            src={playingTrack.album.images[0].url}
+            alt=""
+            className="w-[80px] h-[80px] rounded-lg"
+          />
+        </div>
+        <div className="flex flex-col ml-4 align-middle self-center">
+          <div className="text-white">{playingTrack.name}</div>
+          <div className="text-stone-600">{playingTrack.artists[0].name}</div>
+        </div>
+
+        <button onClick={handlePlayPause}>
+          {isPlaying ? "Pause" : "Play"}
+        </button>
+      </div>
+      <div>
+        <audio controls autoPlay={isPlaying}>
+          <source src={playingTrack.preview_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
     </div>
   );
 };
