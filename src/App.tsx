@@ -86,7 +86,7 @@ const App: React.FC = () => {
           >
             {/* <div onClick={getCurrentPlayingTrack}>show</div>
             <div onClick={playTrackByTrackId}>play track</div> */}
-            <div className="overflow-y-scroll max-h-[650px] w-3/4 ">
+            <div className="overflow-y-scroll max-h-[800px] w-3/4 ">
               <div className="grid items-center grid-cols-7 gap-4 p-4 rounded-lg ">
                 <div>#</div>
                 <div>name</div>
@@ -143,7 +143,7 @@ const App: React.FC = () => {
                   ))
                 : null}
             </div>
-            <div className="overflow-y-scroll max-h-[650px] w-1/4 ">
+            <div className="overflow-y-scroll max-h-[750px] w-1/4 ">
               {playingTrack ? (
                 <div
                   className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
