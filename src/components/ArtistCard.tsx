@@ -19,9 +19,13 @@ const ArtistCard: React.FC<ArtistCardProps> = ({ artist }) => {
         alt={artist.name}
         className="w-32 h-32 rounded-full mx-auto mb-4"
       />
-      <h3 className="text-lg font-semibold">{artist.name}</h3>
-      <p className="text-gray-300 mt-1">{capitalizeFirstLetter(artist.type)}</p>
-      <p className="text-gray-500 mt-2">
+      <h3 className="text-lg font-semibold truncate max-w-[250px]">
+        {artist.name}
+      </h3>
+      <p className="text-gray-300 mt-1 truncate max-w-[250px]">
+        {capitalizeFirstLetter(artist.type)}
+      </p>
+      <p className="text-gray-500 mt-2 truncate max-w-[250px]">
         Genres: {artist.genres.slice(0, 3).join(", ")}
       </p>
     </div>
