@@ -80,48 +80,51 @@ const App: React.FC = () => {
           <main className="flex-grow ">
             <Navbar onSearchResult={handleSearchResult} />
           </main>
-          <div className="content h-[90%]" style={{ borderRadius: "inherit" }}>
-            {/* Render search results here */}
-            <div onClick={getCurrentPlayingTrack}>show</div>
-            <div onClick={playTrackByTrackId}>play track</div>
-            {/* <div className="grid xl:grid-cols-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {searchResult
-                ? searchResult.map((artist) => (
-                    <ArtistCard key={artist.id} artist={artist} />
-                  ))
-                : null}
-            </div> */}
-            <div className="!h-[350px] !max-h-[350px] ">
-              <tr>
-                <th>#</th>
-                <th>name</th>
-                <th>artist</th>
-                <th>album</th>
-                <th>duration</th>
-              </tr>
+          <div
+            className="content h-[85%] flex flex-row"
+            style={{ borderRadius: "inherit" }}
+          >
+            {/* <div onClick={getCurrentPlayingTrack}>show</div>
+            <div onClick={playTrackByTrackId}>play track</div> */}
+            <div className="overflow-y-scroll max-h-[650px] w-3/4 ">
+              <div className="grid items-center grid-cols-7 gap-4 p-4 rounded-lg ">
+                <div>#</div>
+                <div>name</div>
+                <div>artist</div>
+                <div>album</div>
+                <div>duration</div>
+              </div>
 
               {searchResult
                 ? searchResult.map((track, index) => (
                     <div>
                       <div
-                        className={`grid items-center grid-cols-7 gap-4 p-4 rounded-lg ${
-                          playingTrack.id === track.id
+                        className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
+                          playingTrack?.id === track?.id
                             ? "bg-zinc-900"
                             : "hover:bg-zinc-800"
                         }`}
                         onDoubleClick={() => setTrack(track)}
                       >
-                        <div>{index + 1}</div>
-                        <div className="rounded-full">
-                          <img
-                            src={track.album.images[0].url}
-                            alt=""
-                            className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
-                          />
+                        <div className="flex flex-row items-center gap-4">
+                          {index + 1}
+                          <div className="rounded-full">
+                            <img
+                              src={track.album.images[0].url}
+                              alt=""
+                              className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
+                            />
+                          </div>
                         </div>
-                        <div>{track.name}</div>
-                        <div>{track.artists[0].name}</div>
-                        <div>{track.album.name}</div>
+                        <div className="truncate max-w-[250px]">
+                          {track.name}
+                        </div>
+                        <div className="truncate max-w-[250px]">
+                          {track.artists[0].name}
+                        </div>
+                        <div className="truncate max-w-[250px]">
+                          {track.album.name}
+                        </div>
                         <div>
                           {Math.floor(track.duration_ms / 60000)
                             .toString()
@@ -139,6 +142,51 @@ const App: React.FC = () => {
                     </div>
                   ))
                 : null}
+            </div>
+            <div className="overflow-y-scroll max-h-[650px] w-1/4 ">
+              {playingTrack ? (
+                <div
+                  className={`grid items-center grid-cols-6 gap-4 p-4 rounded-lg ${
+                    playingTrack?.id === playingTrack?.id
+                      ? "bg-zinc-900"
+                      : "hover:bg-zinc-800"
+                  }`}
+                  onDoubleClick={() => setTrack(playingTrack)}
+                >
+                  <div className="flex flex-row items-center gap-4">
+                    {1}
+                    <div className="rounded-full">
+                      <img
+                        src={playingTrack.album.images[0].url}
+                        alt=""
+                        className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
+                      />
+                    </div>
+                  </div>
+                  <div className="truncate max-w-[250px]">
+                    {playingTrack.name}
+                  </div>
+                  <div className="truncate max-w-[250px]">
+                    {playingTrack.artists[0].name}
+                  </div>
+                  <div className="truncate max-w-[250px]">
+                    {playingTrack.album.name}
+                  </div>
+                  <div>
+                    {Math.floor(playingTrack.duration_ms / 60000)
+                      .toString()
+                      .padStart(2, "0")}
+                    :
+                    {((playingTrack.duration_ms % 60000) / 1000)
+                      .toFixed(0)
+                      .toString()
+                      .padStart(2, "0")}
+                  </div>
+                  <div>
+                    <button onClick={() => setTrack(playingTrack)}>Play</button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
