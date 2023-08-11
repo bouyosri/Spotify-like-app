@@ -113,27 +113,26 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
           </div>
           {topSongs && topSongs?.length > 0 ? (
             <div className="text-2xl text-white my-6">Top Songs</div>
-          ) : (
-            <div>Still Loading ...</div>
-          )}
+          ) : null}
+          {topSongs && topSongs?.length > 0 ? (
+            <div
+              className={`grid items-center grid-cols-3 cursor-pointer gap-4 p-4 rounded-lg text-white`}
+            >
+              <div className="flex flex-row gap-4 text-white">
+                <div>#</div>
+                <div>Title</div>
+              </div>
+              <div>Album</div>
+              <div>
+                <img
+                  src="images/clock.svg"
+                  alt=""
+                  className="w-[24px] h-[24px] "
+                />
+              </div>
+            </div>
+          ) : null}
 
-          <div
-            className={`grid items-center grid-cols-3 cursor-pointer gap-4 p-4 rounded-lg text-white`}
-          >
-            <div className="flex flex-row gap-4 text-white">
-              <div>#</div>
-              <div>Title</div>
-            </div>
-            <div>Album</div>
-            <div>
-              <img
-                src="images/clock.svg"
-                alt=""
-                className="w-[24px] h-[24px] "
-              />
-            </div>
-            <div></div>
-          </div>
           <div className="overflow-y-scroll max-h-[800px]">
             {topSongs && topSongs?.length > 0 ? (
               topSongs.splice(0, 5).map((track: any, index: any) => (

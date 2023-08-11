@@ -10,7 +10,7 @@ export const getUserPlaylists = async (token: any, userId: string) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data.items) {
             result = data.items;
           } else result = [];

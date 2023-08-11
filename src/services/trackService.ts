@@ -8,7 +8,7 @@ const getAuthorizationUrl = () => {
 };
 export const getCurrentTrack = async (token: any) => {
   var result: any;
-  console.log(token);
+  // console.log(token);
   var parameters = {
     method: "GET",
     headers: {
@@ -32,7 +32,7 @@ export const getCurrentTrack = async (token: any) => {
 
 export const getTrack = async (id: any, token: any) => {
   var result: any;
-  console.log(token);
+  // console.log(token);
   var parameters = {
     method: "GET",
     headers: {
@@ -45,7 +45,7 @@ export const getTrack = async (id: any, token: any) => {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
-        console.log(data);
+        // console.log(data);
         result = data;
       }
     });
@@ -53,7 +53,7 @@ export const getTrack = async (id: any, token: any) => {
 
 export const pauseTrack = async (token: any) => {
   var result: any;
-  console.log(token);
+  // console.log(token);
   var parameters = {
     method: "PUT",
     headers: {
@@ -66,7 +66,7 @@ export const pauseTrack = async (token: any) => {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
-        console.log(data);
+        // console.log(data);
         result = data;
       }
     });
@@ -106,13 +106,13 @@ export const searchTracks = async (searchKey: string, token: any) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.tracks.items);
+        // console.log(data.tracks.items);
         if (data.tracks) {
           result = data.tracks.items;
         }
       });
   }
 
-  console.log(result);
+  // console.log(result);
   return result;
 };
