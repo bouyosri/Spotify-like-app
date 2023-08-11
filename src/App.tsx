@@ -36,8 +36,6 @@ const App: React.FC = () => {
   const [playingTrack, setPlayingTrack] = useState<any | null>(null);
   const [user, setUser] = useState<any | null>(null);
 
-  const [player, setPlayer] = useState<any | null>(null);
-
   useEffect(() => {
     const retrievedToken = getTokenFromHash();
     setToken(retrievedToken);
@@ -51,15 +49,6 @@ const App: React.FC = () => {
     setUser(result);
     console.log(result);
   };
-
-  useEffect(() => {
-    if (player) {
-      // Subscribe to player events
-      player.addListener("player_state_changed", (state: any) => {
-        console.log("Current track:", state.track_window.current_track);
-      });
-    }
-  }, [player]);
 
   const handleSearchResult = (result: any[]) => {
     // console.log(result);

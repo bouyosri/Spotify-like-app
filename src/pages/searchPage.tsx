@@ -66,156 +66,135 @@ const SearchPage: React.FC<any> = ({
   };
 
   const token2 =
-    "BQAdRat4OTXK2blRuqN86hldBnKkCkl52LC__IkA4M62xvqMtRQAW5XI0kzPPyZUod9EvIY4CQNXhqUzL1yTsg_3vpbxmjyrMgpvV0IJyXF2RD2Exw5LoxeOwaIsPyMU0V_zJvNAcdKBjvv0yGtSorTM_3JB_EEl6J2_4ycp-9zF9aNdkVxeWdMbp7mk53I3NdI6AY0u-K_-EeoFS_oBU4YA";
-  // useEffect(() => {
-  //   // Player
+    "BQB8wBL9bjyT-qsZyvxEf24loNW0OKirMRiggLFKo_Mj7uG4TbxS_T87RRa_zTKH5nXZnqR_3ja2mUanKDLIdSUVqab_-NzYkZpLDFxNOTsSagCHkNg-ozr75FTVNOtiOfrjIymW5Vh9f70cm7o5wqJcthMuyMeaqZETV7mFFpo0TULJaYhGHE0TJBKkSdZAfkPKN0-rQaxbWFxKzJ5xE1pH";
 
-  //   (window as any).onSpotifyWebPlaybackSDKReady = () => {
-  //     const newPlayer = new window.Spotify.Player({
-  //       name: "spotify-like-app",
-  //       getOAuthToken: (cb: (token: string) => void) => {
-  //         cb(token2);
-  //       },
-  //     });
-  //     console.log("Spotify Web Playback SDK is ready!");
-
-  //     newPlayer.addListener("ready", ({ device_id }) => {
-  //       newPlayer.connect(); // Connect the player once it's ready
-  //     });
-  //     newPlayer.addListener("player_state_changed", (state) => {
-  //       console.log("Player State Changed:", state);
-  //     });
-
-  //     setPlayer(newPlayer);
-  //   };
-  // }, []);
   const handleSearchTypeChange = (event: any) => {
     setSearchType(event.target.value);
     console.log(event.target.value);
     handleSearchChange(event.target.value);
   };
 
-  const initializeSpotifyPlayer = async (track: any) => {
-    // Load the Spotify Web Playback SDK script
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
+  // const initializeSpotifyPlayer = async (track: any) => {
+  //   // Load the Spotify Web Playback SDK script
+  //   const script = document.createElement("script");
+  //   script.src = "https://sdk.scdn.co/spotify-player.js";
+  //   script.async = true;
 
-    script.onload = () => {
-      // Initialize the player
-      const newPlayer = new window.Spotify.Player({
-        name: "spotify-like-app",
-        getOAuthToken: (cb) => {
-          cb(token2);
-        },
-      });
-      newPlayer.addListener("ready", async ({ device_id }) => {
-        console.log("The Web Playback SDK is ready to play music!");
-        console.log("Device ID", device_id);
-      });
-      newPlayer.addListener("ready", async ({ device_id }) => {
-        try {
-          const response = await fetch(
-            `https://api.spotify.com/v1/tracks/${track.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token2}`,
-              },
-            }
-          );
-          const trackData = await response.json();
-          const trackUri = trackData.uri;
+  //   script.onload = () => {
+  //     // Initialize the player
+  //     const newPlayer = new window.Spotify.Player({
+  //       name: "spotify-like-app",
+  //       getOAuthToken: (cb) => {
+  //         cb(token2);
+  //       },
+  //     });
+  //     newPlayer.addListener("ready", async ({ device_id }) => {
+  //       console.log("The Web Playback SDK is ready to play music!");
+  //       console.log("Device ID", device_id);
+  //     });
+  //     newPlayer.addListener("ready", async ({ device_id }) => {
+  //       try {
+  //         const response = await fetch(
+  //           `https://api.spotify.com/v1/tracks/${track.id}`,
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${token2}`,
+  //             },
+  //           }
+  //         );
+  //         const trackData = await response.json();
+  //         const trackUri = trackData.uri;
 
-          const playResponse = await fetch(
-            `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: `Bearer ${token2}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                uris: [trackUri],
-              }),
-            }
-          );
+  //         const playResponse = await fetch(
+  //           `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
+  //           {
+  //             method: "PUT",
+  //             headers: {
+  //               Authorization: `Bearer ${token2}`,
+  //               "Content-Type": "application/json",
+  //             },
+  //             body: JSON.stringify({
+  //               uris: [trackUri],
+  //             }),
+  //           }
+  //         );
 
-          if (playResponse.status === 204) {
-            console.log("Track is playing!");
-          } else {
-            console.error("Failed to play track.");
-          }
-        } catch (error) {
-          console.error("Error playing track:", error);
-        }
-        try {
-          // Fetch track data using the track ID
-          const response = await fetch(
-            `https://api.spotify.com/v1/tracks/${track.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token2}`,
-              },
-            }
-          );
-          const trackData = await response.json();
+  //         if (playResponse.status === 204) {
+  //           console.log("Track is playing!");
+  //         } else {
+  //           console.error("Failed to play track.");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error playing track:", error);
+  //       }
+  //       try {
+  //         // Fetch track data using the track ID
+  //         const response = await fetch(
+  //           `https://api.spotify.com/v1/tracks/${track.id}`,
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${token2}`,
+  //             },
+  //           }
+  //         );
+  //         const trackData = await response.json();
 
-          // Extract the track URI
-          const trackUri = trackData.uri;
+  //         // Extract the track URI
+  //         const trackUri = trackData.uri;
 
-          // Use the Spotify Web Playback SDK to play the track
-          setPlayer(newPlayer);
-          console.log(player);
-          await player.play({
-            uris: [trackUri],
-          });
+  //         // Use the Spotify Web Playback SDK to play the track
+  //         setPlayer(newPlayer);
+  //         console.log(player);
+  //         await player.play({
+  //           uris: [trackUri],
+  //         });
 
-          console.log("Track is playing!");
-        } catch (error) {
-          console.error("Error playing track:", error);
-        }
-      });
-      setPlayer(newPlayer);
+  //         console.log("Track is playing!");
+  //       } catch (error) {
+  //         console.error("Error playing track:", error);
+  //       }
+  //     });
+  //     setPlayer(newPlayer);
 
-      player.getCurrentState().then((state: any) => {
-        if (!state) {
-          console.error(
-            "User is not playing music through the Web Playback SDK"
-          );
-          return;
-        }
+  //     player.getCurrentState().then((state: any) => {
+  //       if (!state) {
+  //         console.error(
+  //           "User is not playing music through the Web Playback SDK"
+  //         );
+  //         return;
+  //       }
 
-        var current_track = state.track_window.current_track;
-        var next_track = state.track_window.next_tracks[0];
+  //       var current_track = state.track_window.current_track;
+  //       var next_track = state.track_window.next_tracks[0];
 
-        console.log("Currently Playing", current_track);
-        console.log("Playing Next", next_track);
-      });
+  //       console.log("Currently Playing", current_track);
+  //       console.log("Playing Next", next_track);
+  //     });
 
-      newPlayer.connect();
-    };
+  //     newPlayer.connect();
+  //   };
 
-    script.onerror = () => {
-      console.error("Failed to load Spotify Web Playback SDK.");
-    };
+  //   script.onerror = () => {
+  //     console.error("Failed to load Spotify Web Playback SDK.");
+  //   };
 
-    // Append the script to the document body to start loading
-    document.body.appendChild(script);
-  };
+  //   // Append the script to the document body to start loading
+  //   document.body.appendChild(script);
+  // };
 
-  if (player) {
-    player.addListener("player_state_changed", (state: any) => {
-      console.log("Player State Changed:", state);
+  // if (player) {
+  //   player.addListener("player_state_changed", (state: any) => {
+  //     console.log("Player State Changed:", state);
 
-      if (state && state.track_window && state.track_window.current_track) {
-        console.log("A track is currently playing.");
-      } else {
-        console.log("No track is currently playing.");
-      }
+  //     if (state && state.track_window && state.track_window.current_track) {
+  //       console.log("A track is currently playing.");
+  //     } else {
+  //       console.log("No track is currently playing.");
+  //     }
 
-      // Update UI or perform actions based on the state
-    });
-  }
+  //     // Update UI or perform actions based on the state
+  //   });
+  // }
   const playAlbumTrack = async (albumUri: string, position: number) => {
     try {
       const response = await fetch(
@@ -246,70 +225,69 @@ const SearchPage: React.FC<any> = ({
     }
   };
 
-  // Usage
-  const albumUri = "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr"; // Replace with your album URI
-  const position = 5; // Replace with the desired position
+  // const albumUri = "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr";
+  // const position = 5;
 
-  playAlbumTrack(albumUri, position);
+  // playAlbumTrack(albumUri, position);
 
-  const playTrack = async (playerInstance: any, track: string) => {
-    try {
-      const response = await fetch(
-        `https://api.spotify.com/v1/tracks/` + track,
-        {
-          headers: {
-            Authorization: `Bearer ${token2}`,
-          },
-        }
-      );
-      const trackData = await response.json();
+  // const playTrack = async (playerInstance: any, track: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://api.spotify.com/v1/tracks/` + track,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token2}`,
+  //         },
+  //       }
+  //     );
+  //     const trackData = await response.json();
 
-      const trackUri = trackData.uri;
+  //     const trackUri = trackData.uri;
 
-      await playerInstance.play({
-        uris: [trackUri],
-      });
-    } catch (error) {
-      console.error("Error playing track:", error);
-    }
-  };
+  //     await playerInstance.play({
+  //       uris: [trackUri],
+  //     });
+  //   } catch (error) {
+  //     console.error("Error playing track:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (player) {
-      // Subscribe to player events
-      player.addListener("player_state_changed", (state: any) => {
-        console.log("Current track:", state.track_window.current_track);
-      });
-    }
-  }, [player]);
+  // useEffect(() => {
+  //   if (player) {
+  //     // Subscribe to player events
+  //     player.addListener("player_state_changed", (state: any) => {
+  //       console.log("Current track:", state.track_window.current_track);
+  //     });
+  //   }
+  // }, [player]);
 
-  const handlePlayPause = () => {
-    if (player) {
-      if (player._options.id === player._options.activeDeviceId) {
-        player.togglePlay();
-      }
-      player.pause().then(() => {
-        console.log("Paused!");
-      });
-    }
-  };
+  // const handlePlayPause = () => {
+  //   if (player) {
+  //     if (player._options.id === player._options.activeDeviceId) {
+  //       player.togglePlay();
+  //     }
+  //     player.pause().then(() => {
+  //       console.log("Paused!");
+  //     });
+  //   }
+  // };
 
-  const handleNext = () => {
-    if (player) {
-      if (player._options.id === player._options.activeDeviceId) {
-        player.nextTrack();
-      }
-    }
-  };
-  const volumeUp = () => {
-    player.setVolume(1).then(() => {
-      console.log("Volume updated!");
-    });
-  };
+  // const handleNext = () => {
+  //   if (player) {
+  //     if (player._options.id === player._options.activeDeviceId) {
+  //       player.nextTrack();
+  //     }
+  //   }
+  // };
+  // const volumeUp = () => {
+  //   player.setVolume(1).then(() => {
+  //     console.log("Volume updated!");
+  //   });
+  // };
 
   const [test, setTest] = useState(0);
   const setTrack = (track: any) => {
-    initializeSpotifyPlayer(track);
+    // initializeSpotifyPlayer(track);
     setTest(test + 1);
     console.log(track);
     setPlayingTrack(track);
@@ -320,7 +298,7 @@ const SearchPage: React.FC<any> = ({
       className="content h-[85%] flex flex-row m-2 rounded-xl"
       style={{ borderRadius: "inherit" }}
     >
-      <div className="player-container">
+      {/* <div className="player-container">
         {player && (
           <div className="player">
             <img
@@ -339,7 +317,7 @@ const SearchPage: React.FC<any> = ({
             </div>
           </div>
         )}
-      </div>
+      </div> */}
       <div className="overflow-y-scroll max-h-[800px] w-3/4 mx-4 ">
         <select
           className="bg-black text-white border border-white py-2 px-4 rounded appearance-none"

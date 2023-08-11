@@ -36,8 +36,8 @@ const Sidebar: React.FC<any> = ({ user }) => {
     var result = [];
     if (user) result = await getUserPlaylists(token, user.id);
     // setUser(result);
-    setUserPlaylist(result);
     console.log(result);
+    setUserPlaylist(result);
   };
   const capitalizeFirstLetter = (text: string) => {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
