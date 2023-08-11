@@ -3,14 +3,11 @@ export const getUserPlaylists = async (token: any, userId: string) => {
 
   if (token) {
     try {
-      await fetch(
-        "https://api.spotify.com/v1/users/" + userId + "/playlists?limit=20",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await fetch("https://api.spotify.com/v1/users/" + userId + "/playlists", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => response.json())
         .then((data) => {
           console.log(data);

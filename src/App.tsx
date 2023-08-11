@@ -55,7 +55,6 @@ const App: React.FC = () => {
     setSearchResult(result);
   };
   const handleSelectTrack = (track: any) => {
-    // console.log("from app", track);
     setPlayingTrack(track);
   };
 
