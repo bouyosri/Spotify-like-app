@@ -29,33 +29,33 @@ const Sidebar: React.FC<any> = ({ user }) => {
   const getUser = async () => {
     const result = await getUserProfile(token);
     setUser(result);
-    console.log(result);
+    // console.log(result);
     getUserPlaylist();
   };
   const getUserPlaylist = async () => {
     var result = [];
     if (user) result = await getUserPlaylists(token, user.id);
     // setUser(result);
-    console.log(result);
+    // console.log(result);
     setUserPlaylist(result);
   };
   const capitalizeFirstLetter = (text: string) => {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   };
   return (
-    <div className="bg-[#181818] h-[100%] m-2 rounded-xl fixed min-w-[241px] w-[241px]">
-      <div className=" text-white flex flex-col ml-8 ">
+    <div className="bg-[#181818]  m-2 rounded-xl fixed flex flex-col gap-20 h-[92.7%] items-stretch min-w-[241px] w-[241px]">
+      <div className=" text-white flex flex-col h-3/4 ml-8 w-[100%] ">
         <img
           src="images/spotify-logo.svg"
           alt="Spotify Logo"
           className="w-32 mb-6 mt-8"
         />
         <ul className="text-sm text-gray-400 flex flex-col gap-3">
-          <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <a
-              href="/"
-              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
-            >
+          <a
+            href="/"
+            className=" hover:text-white cursor-pointer gap-3 flex flex-row"
+          >
+            <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
               <div>
                 <img
                   src="images/home.svg"
@@ -64,13 +64,13 @@ const Sidebar: React.FC<any> = ({ user }) => {
                 />
               </div>
               <div className="">Home</div>
-            </a>
-          </li>
-          <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <a
-              href="/search"
-              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
-            >
+            </li>
+          </a>
+          <a
+            href="/search"
+            className=" hover:text-white cursor-pointer gap-3 flex flex-row"
+          >
+            <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
               <div>
                 <img
                   src="images/search.svg"
@@ -79,23 +79,8 @@ const Sidebar: React.FC<any> = ({ user }) => {
                 />
               </div>
               <div className="">Search</div>
-            </a>
-          </li>
-          <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
-            <a
-              href="/library"
-              className=" hover:text-white cursor-pointer gap-3 flex flex-row"
-            >
-              <div>
-                <img
-                  src="images/library.svg"
-                  alt="Spotify Logo"
-                  className="w-[24px] h-[24px] "
-                />
-              </div>
-              <div className="">Your Library</div>
-            </a>
-          </li>
+            </li>
+          </a>
         </ul>
         <div className="text-white  mt-10 ">
           <ul className="text-sm text-gray-400 flex flex-col gap-3">
@@ -123,6 +108,16 @@ const Sidebar: React.FC<any> = ({ user }) => {
         </div>
         <div className="text-white  mt-10 ">
           <ul className="text-sm text-gray-400 flex flex-col gap-3">
+            <li className=" hover:text-white cursor-pointer gap-3 flex flex-row">
+              <div>
+                <img
+                  src="images/library.svg"
+                  alt="Spotify Logo"
+                  className="w-[24px] h-[24px] "
+                />
+              </div>
+              <div className="">Your Playlists</div>
+            </li>
             {userPlaylist && userPlaylist.length > 0
               ? userPlaylist.map((item: any) => (
                   <a href={"/playlist?id=" + item.id}>
@@ -147,7 +142,7 @@ const Sidebar: React.FC<any> = ({ user }) => {
           </ul>
         </div>
       </div>
-      <div className="text-xs text-gray-600 mt-4">
+      <div className="text-xs h-1/4 ml-4 text-gray-600 mt-4">
         <a href="#" className="hover:text-white">
           Legal
         </a>

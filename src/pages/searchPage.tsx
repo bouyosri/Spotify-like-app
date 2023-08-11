@@ -57,9 +57,9 @@ const SearchPage: React.FC<any> = ({
         setSearchResultsArtists(resultArtists);
       }
 
-      console.log("searchResultsArtists", searchResultsArtists);
-      console.log("earchResultstracks", searchResultsTracks);
-      console.log("type", search);
+      // console.log("searchResultsArtists", searchResultsArtists);
+      // console.log("earchResultstracks", searchResultsTracks);
+      // console.log("type", search);
     } catch (error) {
       console.error("Error searching artists:", error);
     }
@@ -70,7 +70,7 @@ const SearchPage: React.FC<any> = ({
 
   const handleSearchTypeChange = (event: any) => {
     setSearchType(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
     handleSearchChange(event.target.value);
   };
 
@@ -216,7 +216,7 @@ const SearchPage: React.FC<any> = ({
       );
 
       if (response.ok) {
-        console.log("Album track is playing!");
+        // console.log("Album track is playing!");
       } else {
         console.error("Failed to play album track");
       }
@@ -294,11 +294,13 @@ const SearchPage: React.FC<any> = ({
     onSelectTrack(track);
   };
   return (
-    <div
-      className="content h-[85%] flex flex-row m-2 rounded-xl"
-      style={{ borderRadius: "inherit" }}
-    >
-      {/* <div className="player-container">
+    <div className="text-white bg-[#181818] h-[100%] rounded-xl mx-4">
+      {query ? (
+        <div
+          className="content h-[85%] flex flex-row m-2 !rounded-xl !bg-[#181818]"
+          style={{ borderRadius: "inherit" }}
+        >
+          {/* <div className="player-container">
         {player && (
           <div className="player">
             <img
@@ -318,117 +320,142 @@ const SearchPage: React.FC<any> = ({
           </div>
         )}
       </div> */}
-      <div className="overflow-y-scroll max-h-[800px] w-3/4 mx-4 ">
-        <select
-          className="bg-black text-white border border-white py-2 px-4 rounded appearance-none"
-          value={searchType}
-          onChange={handleSearchTypeChange}
-        >
-          <option value="all">All</option>
-          <option value="track">Tracks</option>
-          <option value="artist">Artists</option>
-        </select>
+          <div className="overflow-y-scroll max-h-[800px] w-3/4 mx-4 ">
+            <select
+              className="bg-black text-white border border-white py-2 px-4 rounded appearance-none"
+              value={searchType}
+              onChange={handleSearchTypeChange}
+            >
+              <option value="all">All</option>
+              <option value="track">Songs</option>
+              <option value="artist">Artists</option>
+            </select>
 
-        <div>
-          {searchResultsArtists && searchResultsArtists?.length > 0 ? (
-            <div className="text-2xl my-6">Artists</div>
-          ) : null}
-          <div className="grid xl:grid-cols-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {searchResultsArtists
-              ? searchResultsArtists.map((artist, index) => (
-                  <div>
-                    <ArtistCard artist={artist} />
+            <div>
+              {searchResultsArtists && searchResultsArtists?.length > 0 ? (
+                <div className="text-2xl my-6">Top Artists Results</div>
+              ) : null}
+              <div className="grid xl:grid-cols-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {searchResultsArtists
+                  ? searchResultsArtists.map((artist, index) => (
+                      <div>
+                        <ArtistCard artist={artist} />
+                      </div>
+                    ))
+                  : null}
+              </div>
+              {searchResultsTracks && searchResultsTracks?.length > 0 ? (
+                <div className="text-2xl my-6">Top Songs Results</div>
+              ) : null}
+              {searchResultsTracks && searchResultsTracks?.length > 0 ? (
+                <div
+                  className={`grid items-center grid-cols-5 cursor-pointer gap-5 p-4 rounded-lg text-white`}
+                >
+                  <div className="flex flex-row gap-2 text-white">
+                    <div>#</div>
                   </div>
-                ))
-              : null}
-          </div>
-          {searchResultsTracks && searchResultsTracks?.length > 0 ? (
-            <div className="text-2xl my-6">Tracks</div>
-          ) : null}
-          <div className="overflow-y-scroll max-h-[800px]  ">
-            {searchResultsTracks
-              ? searchResultsTracks.map((track, index) => (
+                  <div>Title</div>
+                  <div>Artist</div>
+                  <div>Album</div>
                   <div>
-                    <div
-                      className={`grid items-center grid-cols-5 gap-4 p-4 rounded-lg ${
-                        playingTrack?.id === track?.id
-                          ? "bg-zinc-900"
-                          : "hover:bg-zinc-800"
-                      }`}
-                      onDoubleClick={() => setTrack(track)}
-                    >
-                      <div className="flex flex-row items-center gap-4">
-                        {index + 1}
-                        <div className="rounded-full">
-                          <img
-                            src={track.album.images[0].url}
-                            alt=""
-                            className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
-                          />
+                    <img
+                      src="images/clock.svg"
+                      alt=""
+                      className="w-[24px] h-[24px] "
+                    />
+                  </div>
+                </div>
+              ) : null}
+              <div className="  ">
+                {searchResultsTracks
+                  ? searchResultsTracks.map((track, index) => (
+                      <div>
+                        <div
+                          className={`grid items-center grid-cols-5 gap-4 p-4 rounded-lg ${
+                            playingTrack?.id === track?.id
+                              ? "bg-zinc-900"
+                              : "hover:bg-zinc-800"
+                          }`}
+                          onDoubleClick={() => setTrack(track)}
+                        >
+                          <div className="flex flex-row items-center gap-4">
+                            {index + 1}
+                            <div className="rounded-full">
+                              <img
+                                src={track.album.images[0].url}
+                                alt=""
+                                className="w-[50px] rounded-lg h-[50px] min-w-[50px] min-h-[50px] "
+                              />
+                            </div>
+                          </div>
+                          <div className="truncate max-w-[250px]">
+                            {track.name}
+                          </div>
+                          <div className="truncate max-w-[250px]">
+                            {track.artists[0].name}
+                          </div>
+                          <div className="truncate max-w-[250px]">
+                            {track.album.name}
+                          </div>
+                          <div>
+                            {Math.floor(track.duration_ms / 60000)
+                              .toString()
+                              .padStart(2, "0")}
+                            :
+                            {((track.duration_ms % 60000) / 1000)
+                              .toFixed(0)
+                              .toString()
+                              .padStart(2, "0")}
+                          </div>
                         </div>
                       </div>
-                      <div className="truncate max-w-[250px]">{track.name}</div>
-                      <div className="truncate max-w-[250px]">
-                        {track.artists[0].name}
-                      </div>
-                      <div className="truncate max-w-[250px]">
-                        {track.album.name}
-                      </div>
-                      <div>
-                        {Math.floor(track.duration_ms / 60000)
-                          .toString()
-                          .padStart(2, "0")}
-                        :
-                        {((track.duration_ms % 60000) / 1000)
-                          .toFixed(0)
-                          .toString()
-                          .padStart(2, "0")}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="overflow-y-scroll bg-[#181818] rounded-md max-h-[750px] w-1/4 ">
-        {playingTrack ? (
-          <div className="mx-4">
-            <div className=" bg-[#181818]  cursor-pointer p-4 shadow-md rounded-md">
-              <img
-                src={
-                  playingTrack.album.images[0]
-                    ? playingTrack.album.images[0]?.url
-                    : "images/artist.png"
-                } // Replace with your default image URL
-                alt={playingTrack.artists[0].name}
-                className="w-96 h-96 rounded-md mx-auto mb-4"
-              />
-              <h3 className="text-lg font-semibold">{playingTrack.name}</h3>
-              <p className="text-gray-300 mt-1">
-                {playingTrack.artists[0].name}
-              </p>
-            </div>
-
-            <div className="bg-[#181818] cursor-pointer p-4 shadow-md rounded-md relative group">
-              <img
-                src={"images/artist.png"} // Replace with your default image URL
-                alt={playingTrack.artists[0].name}
-                className="w-96 h-96 rounded-md mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity"
-              />
-              <div className="absolute bottom-8 left-4 p-2 text-white group-hover:text-zinc-700">
-                <h3 className="text-lg font-semibold">
-                  {playingTrack.artists[0].name}
-                </h3>
-                <p className="mt-1 text-white group-hover:text-zinc-700">
-                  {playingTrack.artists[0].type}
-                </p>
+                    ))
+                  : null}
               </div>
             </div>
           </div>
-        ) : null}
-      </div>
+
+          <div className="overflow-y-scroll bg-[#181818] rounded-md max-h-[750px] w-1/4 ">
+            {playingTrack ? (
+              <div className="mx-4">
+                <div className=" bg-[#181818]  cursor-pointer p-4 shadow-md rounded-md">
+                  <img
+                    src={
+                      playingTrack.album.images[0]
+                        ? playingTrack.album.images[0]?.url
+                        : "images/artist.png"
+                    } // Replace with your default image URL
+                    alt={playingTrack.artists[0].name}
+                    className="w-96 h-96 rounded-md mx-auto mb-4"
+                  />
+                  <h3 className="text-lg font-semibold">{playingTrack.name}</h3>
+                  <p className="text-gray-300 mt-1">
+                    {playingTrack.artists[0].name}
+                  </p>
+                </div>
+
+                <div className="bg-[#181818] cursor-pointer p-4 shadow-md rounded-md relative group">
+                  <img
+                    src={"images/artist.png"} // Replace with your default image URL
+                    alt={playingTrack.artists[0].name}
+                    className="w-96 h-96 rounded-md mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity"
+                  />
+                  <div className="absolute bottom-8 left-4 p-2 text-white group-hover:text-zinc-700">
+                    <h3 className="text-lg font-semibold">
+                      {playingTrack.artists[0].name}
+                    </h3>
+                    <p className="mt-1 text-white group-hover:text-zinc-700">
+                      {playingTrack.artists[0].type}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div className="m-8"> Search something to get top results</div>
+      )}
     </div>
   );
 };

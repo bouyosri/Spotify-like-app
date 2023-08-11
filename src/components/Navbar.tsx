@@ -29,6 +29,9 @@ const Navbar: React.FC<any> = ({ user }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  //
+
   // setSearchKey(query)
   useEffect(() => {
     const retrievedToken = getTokenFromHash();
@@ -46,14 +49,14 @@ const Navbar: React.FC<any> = ({ user }) => {
   const getUser = async () => {
     const result = await getUserProfile(token);
     setUser(result);
-    console.log(result);
+    // console.log(result);
     getUserPlaylist();
   };
   const getUserPlaylist = async () => {
     var result = [];
     if (user) result = await getUserPlaylists(token, user.id);
     // setUser(result);
-    console.log(result);
+    // console.log(result);
   };
 
   const handleSearchChange = () => {
@@ -62,11 +65,14 @@ const Navbar: React.FC<any> = ({ user }) => {
     }
   };
   return (
-    <div>
+    <div className="text-white">
       <div className="bg-zinc-900 w-[98%] grid grid-cols-3 gap-1 h-16 mx-4 mt-2 rounded-xl">
         {/* Arrows */}
         <div className=" flex flex-row gap-3 ml-4 self-center ">
-          <div className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer">
+          <div
+            onClick={() => navigate(-1)}
+            className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer"
+          >
             <div className="mt-[6px] ml-[6px]">
               <img
                 src="images/arrow-back.svg"
@@ -75,7 +81,10 @@ const Navbar: React.FC<any> = ({ user }) => {
               />
             </div>
           </div>
-          <div className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer">
+          <div
+            onClick={() => navigate(1)}
+            className="bg-black w-[30px] h-[30px] rounded-full cursor-pointer"
+          >
             <div className="mt-[6px] ml-[6px]">
               <img
                 src="images/arrow-next.svg"
@@ -86,34 +95,38 @@ const Navbar: React.FC<any> = ({ user }) => {
           </div>
         </div>
         {/* Search Bar */}
-        <div className=" flex flex-row gap-3 ml-[-100px] self-center bg-white px-8 py-3 rounded-full w-[350px]">
-          <button className="mt-[0px] ml-[0px]" onClick={handleSearchChange}>
-            <img
-              src="images/search-icon.svg"
-              alt=""
-              className="w-[24px] h-[24px] "
-            />
-          </button>
-          <div className="">
-            <input
-              className="w-[250px]"
-              type="text"
-              placeholder="What do you want to listen to?"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onSubmit={handleSearchChange}
-              // value={searchKey}
-              // Call the function on input change
-            />
+        {token ? (
+          <div className=" flex flex-row gap-3 ml-[-100px] self-center bg-white px-8 py-3 rounded-full w-[350px]">
+            <button className="mt-[0px] ml-[0px]" onClick={handleSearchChange}>
+              <img
+                src="images/search-icon.svg"
+                alt=""
+                className="w-[24px] h-[24px] "
+              />
+            </button>
+            <div className="">
+              <input
+                className="w-[250px] text-black"
+                type="text"
+                placeholder="What do you want to listen to?"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onSubmit={handleSearchChange}
+                // value={searchKey}
+                // Call the function on input change
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="self-center">Login to search</div>
+        )}
         <div className="justify-self-end self-center">
           {!token ? (
             <div className=" flex flex-row ">
               <div className="text-gray-300 px-8 py-3 rounded-full">
                 <a href={getAuthorizationUrl()}>Sign up</a>
               </div>
-              <div className="bg-white px-8 py-3 rounded-full">
+              <div className="bg-white text-black px-8 py-3 rounded-full">
                 <a href={getAuthorizationUrl()}>Log in</a>
               </div>
             </div>
@@ -184,7 +197,7 @@ const Navbar: React.FC<any> = ({ user }) => {
         // </form>
         <div></div>
       ) : (
-        <h2>Please login</h2>
+        <h2> </h2>
       )}
     </div>
   );

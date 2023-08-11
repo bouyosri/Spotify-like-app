@@ -47,7 +47,7 @@ const App: React.FC = () => {
   const getUser = async () => {
     const result = await getUserProfile(token);
     setUser(result);
-    console.log(result);
+    // console.log(result);
   };
 
   const handleSearchResult = (result: any[]) => {
@@ -70,7 +70,12 @@ const App: React.FC = () => {
 
             <Navbar onSearchResult={handleSearchResult} user={user} />
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/"
+                element={
+                  <HomePage token={token} onSelectTrack={handleSelectTrack} />
+                }
+              />
               <Route
                 path="/search"
                 element={
