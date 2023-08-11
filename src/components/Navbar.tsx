@@ -26,6 +26,8 @@ const Navbar: React.FC<any> = ({ user }) => {
   const query = searchParams.get("query");
   const [user2, setUser] = useState<any | null>(null);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState("");
   // setSearchKey(query)
   useEffect(() => {
@@ -39,6 +41,7 @@ const Navbar: React.FC<any> = ({ user }) => {
   const handleLogout = () => {
     logout();
     setToken("");
+    setIsDropdownOpen(false);
   };
   const getUser = async () => {
     const result = await getUserProfile(token);
@@ -115,7 +118,62 @@ const Navbar: React.FC<any> = ({ user }) => {
               </div>
             </div>
           ) : (
-            <button onClick={handleLogout}>Logout</button>
+            // <div className="bg-white px-8 py-3 rounded-full">
+            //   <button onClick={handleLogout}>{user.display_name}</button>
+            // </div>
+            <div className="relative inline-block text-left h-5">
+              <div>
+                <span className="rounded-md shadow-sm">
+                  <button
+                    type="button"
+                    className="inline-flex justify-center w-full h-[65px] rounded-md border  px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    id="options-menu"
+                    aria-haspopup="true"
+                    aria-expanded="true"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    <img
+                      src={user && user.images ? user.images[0].url : null} // Replace with your default image URL
+                      alt="user"
+                      className="w-[50px] h-[50px] rounded-full mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity"
+                    />
+                    <svg
+                      className="-mr-1 ml-2 h-5 w-5 "
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+
+              {isDropdownOpen && (
+                <div
+                  className="origin-top-right text-center text-white absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-gray-700 divide-y divide-gray-700"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="options-menu"
+                >
+                  <div className="py-1" role="none">
+                    {user ? user.display_name : null}
+                    <button
+                      className="w-full text-center text-left px-4 py-2 text-sm text-white hover:bg-gray-700 hover:text-white"
+                      role="menuitem"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

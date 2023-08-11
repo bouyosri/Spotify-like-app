@@ -88,7 +88,7 @@ const PlaylistPage: React.FC<any> = ({ token, onSelectTrack }) => {
             </div>
           </div>
           {playlist.tracks && tracks && tracks?.length > 0 ? (
-            <div className="text-2xl text-white my-6">Top Songs</div>
+            <div className="text-2xl text-white my-6">Songs</div>
           ) : null}
           <div
             className={`grid items-center grid-cols-3 cursor-pointer gap-4 p-4 rounded-lg text-white`}

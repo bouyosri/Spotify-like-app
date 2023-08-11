@@ -69,24 +69,41 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
     <div className="w-[98%] h-[90%] bg-[#181818] text-white m-4 rounded-xl overflow-y-scroll max-h-[98%]">
       {artist && (
         <div className="bg-[#202020]  p-4 shadow-md ">
-          <img
-            src={
-              artist.images.length > 0
-                ? artist.images[0]?.url
-                : "images/artist.png"
-            } // Replace with your default image URL
-            alt={artist.name}
-            className="h-40 lg:h-96 w-40 lg:w-96 rounded-xl mx-auto mb-4"
-          />
-          <h3 className="lg:text-8xl text-4xl text-white font-semibold truncate max-w-[450px] lg:max-w-[650px]">
-            {artist.name}
-          </h3>
-          <p className="text-gray-300 mt-1 truncate max-w-[250px]">
-            {/* {capitalizeFirstLetter(artist.type)} */}
-          </p>
-          <p className="text-gray-500 mt-2 truncate max-w-[250px]">
-            Genres: {artist.genres.slice(0, 3).join(", ")}
-          </p>
+          <div className="flex flex-row">
+            <div className="align-middle self-center">
+              <div className="mx-4 ">
+                <h3 className="lg:text-6xl text-4xl text-white font-semibold truncate max-w-[450px] lg:max-w-[650px]">
+                  {artist.name}
+                </h3>
+              </div>
+              <div className="mx-4">
+                <p className="text-gray-300 mt-1 truncate max-w-[250px]">
+                  {/* {capitalizeFirstLetter(artist.type)} */}
+                </p>
+              </div>
+              <div className="mx-4">
+                <p className="text-gray-500 mt-2 truncate max-w-[250px]">
+                  Genres: {artist.genres.slice(0, 3).join(", ")}
+                </p>
+              </div>{" "}
+              <div className="mx-4 mt-20">
+                <p className="text-white mt-2 truncate max-w-[250px]">
+                  {artist.followers.total} followers
+                </p>
+              </div>
+            </div>
+            <div className="mx-4">
+              <img
+                src={
+                  artist.images.length > 0
+                    ? artist.images[0]?.url
+                    : "images/artist.png"
+                }
+                alt={artist.name}
+                className="h-40 lg:h-96 w-40 lg:w-96 rounded-xl mx-auto mb-4"
+              />
+            </div>
+          </div>
           {similarArtists && similarArtists?.length > 0 ? (
             <div className="text-2xl text-white my-6">Similar Artists</div>
           ) : null}
@@ -102,6 +119,24 @@ const ArtistPage: React.FC<any> = ({ token, onSelectTrack }) => {
           {topSongs && topSongs?.length > 0 ? (
             <div className="text-2xl text-white my-6">Top Songs</div>
           ) : null}
+
+          <div
+            className={`grid items-center grid-cols-3 cursor-pointer gap-4 p-4 rounded-lg text-white`}
+          >
+            <div className="flex flex-row gap-4 text-white">
+              <div>#</div>
+              <div>Title</div>
+            </div>
+            <div>Album</div>
+            <div>
+              <img
+                src="images/clock.svg"
+                alt=""
+                className="w-[24px] h-[24px] "
+              />
+            </div>
+            <div></div>
+          </div>
           <div className="overflow-y-scroll max-h-[800px]">
             {topSongs && topSongs?.length > 0
               ? topSongs.splice(0, 5).map((track: any, index: any) => (
