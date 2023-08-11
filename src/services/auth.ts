@@ -23,6 +23,7 @@ export const getTokenFromHash = (): string | null => {
 
 export const logout = (): void => {
   window.localStorage.removeItem("token");
+  window.location.href = "/";
 };
 
 export const getAuthorizationUrl = (): string => {
