@@ -135,7 +135,7 @@ const Navbar: React.FC<any> = ({ user }) => {
                     <img
                       src={user && user.images ? user.images[0].url : null} // Replace with your default image URL
                       alt="user"
-                      className="w-[50px] h-[50px] rounded-full mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity"
+                      className="w-[50px] h-[50px] rounded-full mx-auto mb-4  transition-opacity"
                     />
                     <svg
                       className="-mr-1 ml-2 h-5 w-5 "
